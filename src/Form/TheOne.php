@@ -133,12 +133,23 @@ class TheOne extends FormBase {
           '#title_display' => 'invisible',
         ];
 
-          $form['table' . "$k"][$i]['Jan'] = [
-            '#type' => 'number',
-            '#title' => $this
-              ->t("title"),
-            '#title_display' => 'invisible',
-          ];
+        $form['table' . "$k"][$i]['Jan'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+        // don't forget :: when calling a class method.
+            'callback' => '::myAjaxCallback',
+            // 'callback' => [$this, 'myAjaxCallback'], //alternative notation
+        // Or TRUE to prevent re-focusing on the triggering element.
+            'event' => 'change',
+            'progress' => [
+              'type' => 'throbber',
+              'message' => $this->t('Verifying entry...'),
+            ],
+          ],
+        ];
         $form['table' . "$k"][$i]['Feb'] = [
           '#type' => 'number',
           '#title' => $this
@@ -153,7 +164,7 @@ class TheOne extends FormBase {
         ];
         $form['table' . "$k"][$i]['Q1'] = [
           '#type' => 'number',
-          '#value' => 0,
+          '#default_value' => 0,
           '#disabled' => TRUE,
           '#title' => $this
             ->t("title"),
@@ -246,8 +257,6 @@ class TheOne extends FormBase {
           '#title_display' => 'invisible',
         ];
 
-
-
       }
       $form['table' . "$k"]['actions'] = [
         '#type' => 'actions',
@@ -290,10 +299,17 @@ class TheOne extends FormBase {
       '#value' => $this->t('Submit'),
     ];
 
-
-
     return $form;
 
+  }
+
+  /**
+   *
+   */
+  public function myAjaxCallback(array &$form, FormStateInterface $form_state) {
+    $form_state->setValue(['table1', '0', 'Q1'], 5);
+//    $form['table1']['0']['Q1']['#fefault_value'] = 5;
+    return $form['table1']['0']['Q1'];
   }
 
   /**
@@ -333,7 +349,7 @@ class TheOne extends FormBase {
    *
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (strlen($form_state->getValue(['table1','0','Jan']) < 3)) {
+    if (strlen($form_state->getValue(['table1', '0', 'Jan']) < 3)) {
       $form_state->setErrorByName('table1][0][Jan', $this->t('The phone number is too short. Please enter a full phone number.'));
     }
   }
@@ -357,8 +373,9 @@ class TheOne extends FormBase {
         );
         $this->messenger()->addMessage($output);
 
-      };
-    };
+      }
+    }
+
   }
 
 }
