@@ -36,20 +36,23 @@ class TheOne extends FormBase {
     'Jan',
     'Feb',
     'Mar',
-    'Q1',
     'Apr',
     'May',
     'Jun',
-    'Q2',
     'Jul',
     'Aug',
     'Sept',
-    'Q3',
     'Oct',
     'Nov',
     'Dec',
     'Q4',
-    'YTD',
+  ];
+
+  protected $quartals = [
+    'Q1',
+    'Q2',
+    'Q3',
+    'Ytd',
   ];
 
   protected $headers = [
@@ -129,16 +132,123 @@ class TheOne extends FormBase {
             ->t("Year"),
           '#title_display' => 'invisible',
         ];
-        foreach ($this->month as $v) {
-          $form['table' . "$k"][$i][$v] = [
+
+          $form['table' . "$k"][$i]['Jan'] = [
             '#type' => 'number',
             '#title' => $this
-              ->t("$v"),
+              ->t("title"),
             '#title_display' => 'invisible',
           ];
-        }
-      }
+        $form['table' . "$k"][$i]['Feb'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Mar'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Q1'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Apr'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['May'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Jun'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Q2'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Jul'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Aug'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Sept'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Q3'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Oct'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Nov'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Dec'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Q4'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
+        $form['table' . "$k"][$i]['Ytd'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+        ];
 
+
+
+      }
       $form['table' . "$k"]['actions'] = [
         '#type' => 'actions',
       ];
@@ -146,19 +256,19 @@ class TheOne extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Add Year'),
         '#submit' => ['::addRow'],
-//        '#ajax' => [
-//          'callback' => '::addCallback',
-//          'event' => 'click',
-//        ],
+        // '#ajax' => [
+        //          'callback' => '::addCallback',
+        //          'event' => 'click',
+        //        ],
       ];
       $form['table' . "$k"]['actions']['add_table'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Table'),
         '#submit' => ['::addTable'],
-//        '#ajax' => [
-//          'callback' => '::addCallback',
-//          'event' => 'click',
-//        ],
+        // '#ajax' => [
+        //          'callback' => '::addCallback',
+        //          'event' => 'click',
+        //        ],
       ];
 
       // If there is more than one name, add the remove button.
@@ -173,38 +283,17 @@ class TheOne extends FormBase {
           //            ],
         ];
       }
-      $form['table' . "$k"]['actions']['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Submit'),
-      ];
+
     }
-    // $form['names_fieldset'] = [
-    //      '#type' => 'fieldset',
-    //      '#title' => $this->t('People coming to picnic'),
-    //      '#prefix' => '<div id="names-fieldset-wrapper">',
-    //      '#suffix' => '</div>',
-    //    ];
-    //
-    //    for ($i = 0; $i < $this->number; $i++) {
-    //    $form['names_fieldset']['name'][$i] = [
-    //      '#type' => 'textfield',
-    //        '#title' => $this->t('Name'),
-    //      ];
-    //    }
-    //
-    //    $form['names_fieldset']['actions'] = [
-    //      '#type' => 'actions',
-    //    ];
-    //    $form['names_fieldset']['actions']['add_name'] = [
-    //      '#type' => 'submit',
-    //      '#value' => $this->t('Add one more'),
-    //      '#submit' => ['::addOne'],
-    //      '#ajax' => [
-    //        'callback' => '::addmoreCallback',
-    //        'wrapper' => 'names-fieldset-wrapper',
-    //      ],
-    //    ];
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Submit'),
+    ];
+
+
+
     return $form;
+
   }
 
   /**
@@ -241,6 +330,15 @@ class TheOne extends FormBase {
   }
 
   /**
+   *
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (strlen($form_state->getValue(['table1','0','Jan']) < 3)) {
+      $form_state->setErrorByName('table1][0][Jan', $this->t('The phone number is too short. Please enter a full phone number.'));
+    }
+  }
+
+  /**
    * Final submit handler.
    *
    * Reports what values were finally set.
@@ -254,8 +352,8 @@ class TheOne extends FormBase {
         $values = $form_state->getValue(['table' . "$k", "$i"]);
 
         $output = $this->t('picnic: @names', [
-            '@names' => implode(', ', $values),
-          ]
+          '@names' => implode(', ', $values),
+        ]
         );
         $this->messenger()->addMessage($output);
 
