@@ -1,0 +1,46 @@
+<table class = "table1">
+  <tr>
+    <th>Year</th>
+    <th>Jan</th>
+    <th>Feb</th>
+    <th>Mar</th>
+    <th>Q1</th>
+    <th>Apr</th>
+    <th>May</th>
+    <th>Jun</th>
+    <th>Q2</th>
+    <th>Jul</th>
+    <th>Avg</th>
+    <th>Sep</th>
+    <th>Q3</th>
+    <th>Oct</th>
+    <th>Nov</th>
+    <th>Dec</th>
+    <th>Q4</th>
+    <th>YTD</th>
+  </tr>
+  {% for form in form if form.actions %}
+  <tr>
+    <td class = "quartal">2019</td>
+    <td>{{ form.Jan }}</td>
+    <td>{{ form.Feb }}</td>
+    <td>{{ form.Mar }}</td>
+    <td class = "quartal">{{ form.Q1 }}</td>
+    <td>{{ form.Apr }}</td>
+    <td>{{ form.May }}</td>
+    <td>{{ form.Jun }}</td>
+    <td class = "quartal">{{ form.Q2 }}</td>
+    <td>{{ form.Jul }}</td>
+    <td>{{ form.Aug }}</td>
+    <td>{{ form.Sept }}</td>
+    <td class = "quartal">{{ form.Q3 }}</td>
+    <td>{{ form.Oct }}</td>
+    <td>{{ form.Nov }}</td>
+    <td>{{ form.Dec }}</td>
+    <td>{{ form.Q4 }}</td>
+    <td class = "quartal">{{ form.Ytd }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<div>{{ form.actions }}</div>
+{{ dump(form) }}

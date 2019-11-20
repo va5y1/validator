@@ -1,0 +1,23 @@
+.table1 {
+  border: 3px solid gray;
+}
+.table1 td,
+th {
+  border: 1px solid #0f0f0f;
+  padding: 1px; !important;
+}
+.table1 th {
+  background: gray;
+  height: 35px;
+}
+.table1 .form-inline .form-control {
+  width: 56px;
+}
+.table1 .quartal .form-inline .form-control{
+  background-color: gray;
+  color: #3900ff;
+}
+.table1 .quartal {
+  background: darkgray;
+  padding: 3px;
+}

@@ -1,0 +1,6 @@
+name: validator
+type: module
+description: This module can validate table or do something important
+package: Custom
+core: 8.x
+core_version_requirement: ^8 || ^9
