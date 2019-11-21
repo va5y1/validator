@@ -139,10 +139,10 @@ class TheOne extends FormBase {
             ->t("title"),
           '#title_display' => 'invisible',
           '#ajax' => [
-        // don't forget :: when calling a class method.
+            // don't forget :: when calling a class method.
             'callback' => '::myAjaxCallback',
             // 'callback' => [$this, 'myAjaxCallback'], //alternative notation
-        // Or TRUE to prevent re-focusing on the triggering element.
+            // Or TRUE to prevent re-focusing on the triggering element.
             'event' => 'change',
             'progress' => [
               'type' => 'throbber',
@@ -169,6 +169,11 @@ class TheOne extends FormBase {
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+          ],
         ];
         $form['table' . "$k"][$i]['Apr'] = [
           '#type' => 'number',
@@ -195,6 +200,11 @@ class TheOne extends FormBase {
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+          ],
         ];
         $form['table' . "$k"][$i]['Jul'] = [
           '#type' => 'number',
@@ -221,6 +231,11 @@ class TheOne extends FormBase {
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+          ],
         ];
         $form['table' . "$k"][$i]['Oct'] = [
           '#type' => 'number',
@@ -247,6 +262,11 @@ class TheOne extends FormBase {
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+          ],
         ];
         $form['table' . "$k"][$i]['Ytd'] = [
           '#type' => 'number',
@@ -255,6 +275,11 @@ class TheOne extends FormBase {
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+          ],
         ];
 
       }
@@ -308,7 +333,7 @@ class TheOne extends FormBase {
    */
   public function myAjaxCallback(array &$form, FormStateInterface $form_state) {
     $form_state->setValue(['table1', '0', 'Q1'], 5);
-//    $form['table1']['0']['Q1']['#fefault_value'] = 5;
+    //    $form['table1']['0']['Q1']['#fefault_value'] = 5;
     return $form['table1']['0']['Q1'];
   }
 
@@ -349,7 +374,7 @@ class TheOne extends FormBase {
    *
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (strlen($form_state->getValue(['table1', '0', 'Jan']) < 3)) {
+    if (strlen($form_state->getValue(['table1', '0', 'Jan']) < 1)) {
       $form_state->setErrorByName('table1][0][Jan', $this->t('The phone number is too short. Please enter a full phone number.'));
     }
   }
@@ -368,8 +393,8 @@ class TheOne extends FormBase {
         $values = $form_state->getValue(['table' . "$k", "$i"]);
 
         $output = $this->t('picnic: @names', [
-          '@names' => implode(', ', $values),
-        ]
+            '@names' => implode(', ', $values),
+          ]
         );
         $this->messenger()->addMessage($output);
 
