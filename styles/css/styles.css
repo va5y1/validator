@@ -1,17 +1,13 @@
 .mytable {
   border: 3px solid gray;
 }
-.mytable td,
-th {
-  border: 1px solid #0f0f0f;
-  padding: 1px; !important;
-}
 .mytable th {
   background: gray;
   height: 35px;
 }
 .mytable .form-inline .form-control {
-  width: 46px;
+  width: 50px;
+  padding: 1px;
 }
 .mytable .form-control[disabled] {
   background-color: #b5b5b5;
@@ -20,4 +16,7 @@ th {
 .mytable .quartal {
   background: darkgray;
   padding: 3px;
+}
+.mytable .foo .form-inline{
+  padding: 1px; !important;
 }
