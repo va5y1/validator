@@ -13,10 +13,6 @@
  */
 function validator_theme($existing, $type, $theme, $path) {
   return [
-    'validator_form'=>[
-      'render element'=> 'form',
-      'file' => 'validator.theme.inc',
-      ],
     'table_validator'=>[
       'render element'=> 'form',
       'file' => 'validator.theme.inc',

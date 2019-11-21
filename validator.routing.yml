@@ -5,14 +5,6 @@ validator.example:
     _controller: '\Drupal\validator\Controller\ValidatorController::build'
   requirements:
     _permission: 'access content'
-
-validator.form:
-  path: '/valid'
-  defaults:
-    _title: 'Form'
-    _form: 'Drupal\validator\Form\Form'
-  requirements:
-    _permission: 'access content'
 validator.theone:
   path: '/validator'
   defaults:

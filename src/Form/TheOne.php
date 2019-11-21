@@ -96,15 +96,15 @@ class TheOne extends FormBase {
     $form['#tree'] = TRUE;
 
     for ($k = 1; $k <= $this->table; $k++) {
-      $form['table' . "$k"]['actions'] = [
+      $form['table' . $k]['actions'] = [
         '#type' => 'actions',
       ];
-      $form['table' . "$k"]['actions']['add_fields'] = [
+      $form['table' . $k]['actions']['add_fields'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Year'),
         '#submit' => ['::addRow'],
       ];
-      $form['table' . "$k"] = [
+      $form['table' . $k] = [
         '#type' => 'table',
         '#caption' => $this
           ->t('Sample Table'),
@@ -118,13 +118,13 @@ class TheOne extends FormBase {
 
       for ($i = 0; $i < $this->number; $i++) {
 
-        $form['table' . "$k"][$i]['#attributes'] = [
+        $form['table' . $k][$i]['#attributes'] = [
           'class' => [
             'foo',
           ],
         ];
 
-        $form['table' . "$k"][$i]['Years'] = [
+        $form['table' . $k][$i]['Years'] = [
           '#type' => 'textfield',
           '#value' => 2019 - $i,
           '#disabled' => TRUE,
@@ -133,39 +133,43 @@ class TheOne extends FormBase {
           '#title_display' => 'invisible',
         ];
 
-        $form['table' . "$k"][$i]['Jan'] = [
+        $form['table' . $k][$i]['Jan'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
           '#ajax' => [
-            // don't forget :: when calling a class method.
-            'callback' => '::myAjaxCallback',
-            // 'callback' => [$this, 'myAjaxCallback'], //alternative notation
-            // Or TRUE to prevent re-focusing on the triggering element.
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . $i,
             'event' => 'change',
-            'progress' => [
-              'type' => 'throbber',
-              'message' => $this->t('Verifying entry...'),
-            ],
           ],
         ];
-        $form['table' . "$k"][$i]['Feb'] = [
+        $form['table' . $k][$i]['Feb'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Mar'] = [
+        $form['table' . $k][$i]['Mar'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Q1'] = [
+        $form['table' . $k][$i]['Q1'] = [
           '#type' => 'number',
+          '#disabled' => TRUE,
           '#default_value' => 0,
-          '#disabled' => TRUE,
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
@@ -173,27 +177,45 @@ class TheOne extends FormBase {
             'class' => [
               'quartal',
             ],
+            'id' => [
+              'edit-outputQ1' . $k . $i,
+            ],
           ],
         ];
-        $form['table' . "$k"][$i]['Apr'] = [
+        $form['table' . $k][$i]['Apr'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['May'] = [
+        $form['table' . $k][$i]['May'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Jun'] = [
+        $form['table' . $k][$i]['Jun'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Q2'] = [
+        $form['table' . $k][$i]['Q2'] = [
           '#type' => 'number',
           '#value' => 0,
           '#disabled' => TRUE,
@@ -204,27 +226,45 @@ class TheOne extends FormBase {
             'class' => [
               'quartal',
             ],
+            'id' => [
+              'edit-outputQ2' . $k . $i,
+            ],
           ],
         ];
-        $form['table' . "$k"][$i]['Jul'] = [
+        $form['table' . $k][$i]['Jul'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Aug'] = [
+        $form['table' . $k][$i]['Aug'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Sept'] = [
+        $form['table' . $k][$i]['Sept'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Q3'] = [
+        $form['table' . $k][$i]['Q3'] = [
           '#type' => 'number',
           '#value' => 0,
           '#disabled' => TRUE,
@@ -235,27 +275,45 @@ class TheOne extends FormBase {
             'class' => [
               'quartal',
             ],
+            'id' => [
+              'edit-outputQ3' . $k . $i,
+            ],
           ],
         ];
-        $form['table' . "$k"][$i]['Oct'] = [
+        $form['table' . $k][$i]['Oct'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Nov'] = [
+        $form['table' . $k][$i]['Nov'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Dec'] = [
+        $form['table' . $k][$i]['Dec'] = [
           '#type' => 'number',
           '#title' => $this
             ->t("title"),
           '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . $i,
+            'event' => 'change',
+          ],
         ];
-        $form['table' . "$k"][$i]['Q4'] = [
+        $form['table' . $k][$i]['Q4'] = [
           '#type' => 'number',
           '#value' => 0,
           '#disabled' => TRUE,
@@ -266,9 +324,12 @@ class TheOne extends FormBase {
             'class' => [
               'quartal',
             ],
+            'id' => [
+              'edit-outputQ4' . $k . $i,
+            ],
           ],
         ];
-        $form['table' . "$k"][$i]['Ytd'] = [
+        $form['table' . $k][$i]['Ytd'] = [
           '#type' => 'number',
           '#value' => 0,
           '#disabled' => TRUE,
@@ -278,15 +339,18 @@ class TheOne extends FormBase {
           '#attributes' => [
             'class' => [
               'quartal',
+            ],
+            'id' => [
+              'edit-outputYTD' . $k . $i,
             ],
           ],
         ];
 
       }
-      $form['table' . "$k"]['actions'] = [
+      $form['table' . $k]['actions'] = [
         '#type' => 'actions',
       ];
-      $form['table' . "$k"]['actions']['add_fields'] = [
+      $form['table' . $k]['actions']['add_fields'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Year'),
         '#submit' => ['::addRow'],
@@ -295,7 +359,7 @@ class TheOne extends FormBase {
         //          'event' => 'click',
         //        ],
       ];
-      $form['table' . "$k"]['actions']['add_table'] = [
+      $form['table' . $k]['actions']['add_table'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Table'),
         '#submit' => ['::addTable'],
@@ -307,7 +371,7 @@ class TheOne extends FormBase {
 
       // If there is more than one name, add the remove button.
       if ($this->number > 1) {
-        $form['table' . "$k"]['actions']['remove_fields'] = [
+        $form['table' . $k]['actions']['remove_fields'] = [
           '#type' => 'submit',
           '#value' => $this->t('Remove Year'),
           '#submit' => ['::removeCallback'],
@@ -331,10 +395,65 @@ class TheOne extends FormBase {
   /**
    *
    */
-  public function myAjaxCallback(array &$form, FormStateInterface $form_state) {
-    $form_state->setValue(['table1', '0', 'Q1'], 5);
-    //    $form['table1']['0']['Q1']['#fefault_value'] = 5;
-    return $form['table1']['0']['Q1'];
+  public function Q1Callback(array &$form, FormStateInterface $form_state) {
+    $sum = 5;
+    for ($k = 1; $k <= $this->table; $k++) {
+      for ($i = 0; $i < $this->number; $i++) {
+        $form['table' . $k][$i]['Q1']['#value'] = $sum;
+        return $form['table' . $k][$i]['Q1'];
+      }
+    }
+  }
+  /**
+   *
+   */
+  public function Q2Callback(array &$form, FormStateInterface $form_state) {
+    $sum = 5;
+    for ($k = 1; $k <= $this->table; $k++) {
+      for ($i = 0; $i < $this->number; $i++) {
+
+        $form['table' . $k][$i]['Q2']['#value'] = 1;
+        return $form['table' . $k][$i]['Q2'];
+      }
+    }
+  }
+  /**
+   *
+   */
+  public function Q3Callback(array &$form, FormStateInterface $form_state) {
+    $sum = 5;
+    for ($k = 1; $k <= $this->table; $k++) {
+      for ($i = 0; $i < $this->number; $i++) {
+        $form['table' . $k][$i]['Q3']['#value'] = 2;
+        return $form['table' . $k][$i]['Q3'];
+
+      }
+    }
+  }
+  /**
+   *
+   */
+  public function Q4Callback(array &$form, FormStateInterface $form_state) {
+    $sum = 5;
+    for ($k = 1; $k <= $this->table; $k++) {
+      for ($i = 0; $i < $this->number; $i++) {
+        $form['table' . $k][$i]['Q4']['#value'] = 3;
+        return $form['table' . $k][$i]['Q4'];
+
+      }
+    }
+  }
+  /**
+   *
+   */
+  public function YTDCallback(array &$form, FormStateInterface $form_state) {
+    $sum = 5;
+    for ($k = 1; $k <= $this->table; $k++) {
+      for ($i = 0; $i < $this->number; $i++) {
+        $form['table' . $k][$i]['YTD']['#value'] = 4;
+        return $form['table' . $k][$i]['YTD'];
+      }
+    }
   }
 
   /**
@@ -390,7 +509,7 @@ class TheOne extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     for ($k = 1; $k <= $this->table; $k++) {
       for ($i = 0; $i < $this->number; $i++) {
-        $values = $form_state->getValue(['table' . "$k", "$i"]);
+        $values = $form_state->getValue(['table' . $k, $i]);
 
         $output = $this->t('picnic: @names', [
             '@names' => implode(', ', $values),
