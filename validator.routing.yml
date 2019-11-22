@@ -12,3 +12,17 @@ validator.theone:
     _form: 'Drupal\validator\Form\TheOne'
   requirements:
     _permission: 'access content'
+validator.form:
+  path: '/ex'
+  defaults:
+    _title: 'Form'
+    _form: 'Drupal\validator\Form\Form'
+  requirements:
+    _permission: 'access content'
+validator.formclass:
+  path: '/exa'
+  defaults:
+    _title: 'Form'
+    _form: 'Drupal\validator\Form\FormClass'
+  requirements:
+    _permission: 'access content'

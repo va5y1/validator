@@ -14,19 +14,17 @@ use Drupal\Core\Form\FormStateInterface;
 class TheOne extends FormBase {
 
   /**
-   * This var = count of rows.
-   *
-   * @var int
-   */
-  protected $number = 1;
-
-  /**
    * This var = count of tables.
    *
    * @var int
    */
   protected $table = 1;
-
+  /**
+   * This var = count of rows.
+   *
+   * @var int
+   */
+  protected $number = 1;
   /**
    * This array is a table header.
    *
@@ -87,7 +85,16 @@ class TheOne extends FormBase {
    * Build form.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
+    // Gather the number of names in the form already.
+    $tab = $form_state->get('tab');
+    // We have to ensure that there is at least one name field.
+    if ($tab === NULL) {
+      $name_field = $form_state->set('tab', 1);
+      $tab = 1;
+    }
+    for ($k = 1; $k <= $tab; $k++){
+      $row[$k] = 1;
+    }
     $form['description'] = [
       '#type' => 'item',
       '#markup' => $this->t('This table make wonderful things'),
@@ -95,7 +102,7 @@ class TheOne extends FormBase {
 
     $form['#tree'] = TRUE;
 
-    for ($k = 1; $k <= $this->table; $k++) {
+    for ($k = 1; $k <= $tab; $k++) {
       $form['table' . $k]['actions'] = [
         '#type' => 'actions',
       ];
@@ -423,6 +430,11 @@ class TheOne extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Add Year'),
         '#submit' => ['::addRow'],
+        '#attributes' => [
+          'id' => [
+            'add' . $k ,
+          ],
+        ],
         // '#ajax' => [
         //          'callback' => '::addCallback',
         //          'event' => 'click',
@@ -562,15 +574,23 @@ class TheOne extends FormBase {
    * @todo comments.
    */
   public function addRow(array &$form, FormStateInterface $form_state) {
-    $this->number++;
-    $form_state->setRebuild();
+    $triggeringElement = $form_state->getTriggeringElement();
+    $tab = $form_state->get('tab');
+    for ($k = 1; $k <= $tab; $k++) {
+      if ($triggeringElement['#attributes']['id'][0] == 'add' . $k) {
+        $trig = $triggeringElement;
+      }
+      $form_state->setRebuild();
+    }
   }
 
   /**
    *
    */
   public function addTable(array $form, FormStateInterface $form_state) {
-    $this->table++;
+    $name_field = $form_state->get('tab');
+    $add_button = $name_field + 1;
+    $form_state->set('tab', $add_button);
     $form_state->setRebuild();
   }
 
