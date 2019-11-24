@@ -20,7 +20,7 @@ class Form extends FormBase {
   /**
    *
    */
-  public function buildForm(array $form, FormStateInterface $form_state, Array $profile = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, array $profile = NULL) {
 
     $form['submit'] = [
       '#type' => 'submit',
@@ -44,7 +44,7 @@ class Form extends FormBase {
     $triggeringElement = $form_state->getTriggeringElement();
     $clickCounter = 0;
     // If a click occurs.
-    for($i = 2; $i <3; $i++) {
+    for ($i = 2; $i < 3; $i++) {
       if ($triggeringElement and $triggeringElement['#attributes']['id'] == 'add-row' . $i) {
         // Click counter is incremented
         // $formstate and $form element are updated.
@@ -65,7 +65,7 @@ class Form extends FormBase {
     for ($k = 0; $k < $clickCounter; $k++) {
       $form['myTable'][6 + $k] = $this->getTableLine(6 + $k);
     }
-    for($i = 0; $i <3; $i++) {
+    for ($i = 0; $i < 3; $i++) {
       $form['addRow' . $i] = [
         '#type' => 'button',
         '#value' => t('Add a row'),

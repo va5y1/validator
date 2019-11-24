@@ -26,3 +26,10 @@ validator.formclass:
     _form: 'Drupal\validator\Form\FormClass'
   requirements:
     _permission: 'access content'
+validator.table:
+  path: '/validation'
+  defaults:
+    _title: 'Form'
+    _form: 'Drupal\validator\Form\Table'
+  requirements:
+    _permission: 'access content'
