@@ -1,5 +1,10 @@
 validator_form.css:
-  version: VERSION
+  version: 1.x
   css:
     theme:
       styles/css/styles.css: { }
+  js:
+      styles/js/script.js: { }
+  dependencies:
+      - core/jquery
+      - core/jquery.once

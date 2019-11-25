@@ -1,5 +1,7 @@
-.mytable {
+.mytable,
+.table {
   border: 3px solid gray;
+  margin-bottom: 7px;
 }
 .mytable th {
   background: gray;
@@ -19,4 +21,7 @@
 }
 .mytable .foo .form-inline{
   padding: 1px; !important;
+}
+#add_table{
+
 }

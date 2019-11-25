@@ -414,9 +414,9 @@ class TheOne extends FormBase {
             'class' => [
               'quartal',
             ],
-            'id' => [
-              'edit-outputQ4' . $k . 1,
-            ],
+//            'id' => [
+//              'edit-outputQ4' . $k . 1,
+//            ],
 
           ],
           '#ajax' => [
@@ -453,10 +453,10 @@ class TheOne extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Add Table'),
         '#submit' => ['::addTable'],
-        // '#ajax' => [
-        //          'callback' => '::addCallback',
-        //          'event' => 'click',
-        //        ],
+         '#ajax' => [
+                  'callback' => '::addCallback',
+                  'event' => 'click',
+                ],
       ];
     }
     // If there is more than one name, add the remove button.

@@ -2,6 +2,7 @@
 
 namespace Drupal\Validator\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -46,7 +47,6 @@ class Table extends FormBase {
     ];
 
     $form['#tree'] = TRUE;
-
     // Цикл відповідає за кількість таблиць.
     for ($k = 1; $k <= $tab; $k++) {
       // Масив зберігає значення таблиця => кількість рядків.
@@ -60,15 +60,16 @@ class Table extends FormBase {
         '#type' => 'submit',
         '#value' => 'Add Year' . $k,
         '#submit' => ['::addRow'],
-        '#attributes' => [
-          'id' => [
-            'add' . $k,
-          ],
-        ],
-        // '#ajax' => [
-        //          'callback' => '::addCallback',
-        //          'event' => 'click',
-        //        ],
+//        '#attributes' => [
+//          'id' => [
+//            'add' . $k,
+//          ],
+//        ],
+//        '#ajax' => [
+//          'callback' => '::addRowCallback',
+//          'event' => 'click',
+//          'wrapper' => 'table-module',
+//        ],
       ];
       $form['table' . $k] = [
         '#type' => 'table',
@@ -92,17 +93,87 @@ class Table extends FormBase {
           t('Q4'),
           t('YTD'),
         ],
+        '#attributes' => [
+          'class' => [
+            'mytable',
+          ],
+        ],
       ];
-      $form['add_table' . $k] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Add Table'),
-        '#submit' => ['::addTable'],
-        // '#ajax' => [
-        //          'callback' => '::addCallback',
-        //          'event' => 'click',
-        //        ],
-      ];
+
+      for ($i = ($form_state->get(['table', $k])); $i > 0; $i--) {
+        $form['table' . $k][$i]['#attributes'] = [
+          'class' => [
+            'foo',
+          ],
+        ];
+
+        $form['table' . $k][$i]['Years'] = [
+          '#type' => 'textfield',
+          '#value' => 2020 - $i,
+          '#disabled' => TRUE,
+        ];
+        for ($m = 1; $m < 4; $m++) {
+          $form['table' . $k][$i][$m] = [
+            '#type' => 'number',
+          ];
+        }
+        $form['table' . $k][$i]['Q1'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+        ];
+        for ($m = 4; $m < 7; $m++) {
+          $form['table' . $k][$i][$m] = [
+            '#type' => 'number',
+          ];
+        }
+        $form['table' . $k][$i]['Q2'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+        ];
+        for ($m = 7; $m < 10; $m++) {
+          $form['table' . $k][$i][$m] = [
+            '#type' => 'number',
+          ];
+        }
+        $form['table' . $k][$i]['Q3'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+        ];
+        for ($m = 10; $m < 13; $m++) {
+          $form['table' . $k][$i][$m] = [
+            '#type' => 'number',
+          ];
+        }
+        $form['table' . $k][$i]['Q4'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+        ];
+        $form['table' . $k][$i]['YTD'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+        ];
+      } //end for $i
+
     } //end for $k
+    $form['actions']['add_table'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Add Table'),
+      '#submit' => ['::addTable'],
+//      '#ajax' => [
+//        'callback' => '::addTableCallback',
+//        'event' => 'click',
+//        'wrapper' => 'table-module',
+//      ],
+    ];
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Submit'),
+    ];
     return $form;
   }
 
@@ -114,18 +185,15 @@ class Table extends FormBase {
     $add_table = $table_field + 1;
     $form_state->set('tab', $add_table);
     $form_state->setRebuild();
-
   }
 
   /**
    * Adding new rows.
    */
   public function addRow(array $form, FormStateInterface $form_state) {
-    // $triggeringElement = $form_state->getTriggeringElement();
     $tab = $form_state->get('tab');
     $post = substr($_POST['op'], 8);
     for ($k = 1; $k <= $tab; $k++) {
-
       $row = $form_state->get(['table', $k]);
       if ($k == $post) {
         $row++;
@@ -134,7 +202,12 @@ class Table extends FormBase {
     }
     $form_state->setRebuild();
   }
-
+  public function addTableCallback (array &$form, FormStateInterface $form_state) {
+    return $form;
+  }
+  public function addRowCallback (array &$form, FormStateInterface $form_state) {
+    return $form;
+  }
   /**
    * Form submission handler.
    *
@@ -146,5 +219,4 @@ class Table extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // TODO: Implement submitForm() method.
   }
-
 }
