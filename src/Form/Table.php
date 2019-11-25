@@ -1,13 +1,34 @@
 <?php
 
-
 namespace Drupal\Validator\Form;
-
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ *
+ */
 class Table extends FormBase {
+  protected $headers = [
+    'Year',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Q1',
+    'Apr',
+    'May',
+    'Jun',
+    'Q2',
+    'Jul',
+    'Aug',
+    'Sept',
+    'Q3',
+    'Oct',
+    'Nov',
+    'Dec',
+    'Q4',
+    'YTD',
+  ];
 
   /**
    * Returns a unique string identifying the form.
@@ -35,7 +56,15 @@ class Table extends FormBase {
    *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // TODO: Implement buildForm() method.
+
+    $form['table' . 1] = [
+      '#type' => 'table',
+      '#caption' => $this
+        ->t('Sample Table'),
+      '#header' => $this->headers,
+    ];
+
+    return $form;
   }
 
   /**
@@ -49,4 +78,5 @@ class Table extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // TODO: Implement submitForm() method.
   }
+
 }

@@ -85,6 +85,7 @@ class TheOne extends FormBase {
    * Build form.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     // Gather the number of names in the form already.
     $tab = $form_state->get('tab');
     // We have to ensure that there is at least one name field.
@@ -92,9 +93,9 @@ class TheOne extends FormBase {
       $name_field = $form_state->set('tab', 1);
       $tab = 1;
     }
-    for ($k = 1; $k <= $tab; $k++) {
-      $row[$k] = 1;
-    }
+//    for ($k = 1; $k <= $tab; $k++) {
+//      $row[$k] = 1;
+//    }
     $form['description'] = [
       '#type' => 'item',
       '#markup' => $this->t('This table make wonderful things'),
@@ -103,18 +104,36 @@ class TheOne extends FormBase {
     $form['#tree'] = TRUE;
 
     for ($k = 1; $k <= $tab; $k++) {
-//      $form['table' . $k]['actions'] = [
-//        '#type' => 'actions',
-//      ];
-//      $form['table' . $k]['actions']['add_fields'] = [
-//        '#type' => 'submit',
-//        '#value' => $this->t('Add Year'),
-//        '#submit' => ['::addRow'],
-//      ];
+      $table[$k] = $form_state->get(['table', $k]);
+      // We have to ensure that there is at least one name field.
+      if ($table[$k] === NULL) {
+        $name = $form_state->set(['table', $k], 1);
+        $table[$k] = 1;
+      }
+      // $form['table' . $k]['actions'] = [
+      //        '#type' => 'actions',
+      //      ];
+      //      $form['table' . $k]['actions']['add_fields'] = [
+      //        '#type' => 'submit',
+      //        '#value' => $this->t('Add Year'),
+      //        '#submit' => ['::addRow'],
+      //      ];
+      $form['add_fields' . $k] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Add Year'. $k),
+        '#submit' => ['::addRow'],
+        '#attributes' => [
+          'id' => [
+            'add' . $k,
+          ],
+        ],
+        // '#ajax' => [
+        //          'callback' => '::addCallback',
+        //          'event' => 'click',
+        //        ],
+      ];
       $form['table' . $k] = [
         '#type' => 'table',
-        '#caption' => $this
-          ->t('Sample Table'),
         '#header' => $this->headers,
         '#attributes' => [
           'class' => [
@@ -122,35 +141,42 @@ class TheOne extends FormBase {
           ],
         ],
       ];
-      $form['table' . $k][1]['#attributes'] = [
-        'class' => [
-          'foo',
-        ],
-      ];
 
-      $form['table' . $k][1]['Years'] = [
-        '#type' => 'textfield',
-        '#value' => 2019 - 1,
-        '#disabled' => TRUE,
-        '#title' => $this
-          ->t("Year"),
-        '#title_display' => 'invisible',
-      ];
-
-      $form['table' . $k][1]['Jan'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q1Callback',
-          'wrapper' => 'edit-outputQ1' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
+      // if($table[$k] == $k){
+      //        echo "GOOOOOOOOOOOOOOOD";
+      //      }.
+      for ($i = 1; $i <= $form_state->get(['table', $k]); $i++) {
+        $form['table' . $k][$i]['#attributes'] = [
+          'class' => [
+            'foo',
           ],
-        ],
-      ];
+        ];
+
+
+        $form['table' . $k][$i]['Years'] = [
+          '#type' => 'textfield',
+          '#value' => 2019 - 1,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("Year"),
+          '#title_display' => 'invisible',
+        ];
+
+        $form['table' . $k][$i]['Jan'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+      }
       $form['table' . $k][1]['Feb'] = [
         '#type' => 'number',
         '#title' => $this
@@ -419,24 +445,10 @@ class TheOne extends FormBase {
         ],
       ];
 
+      // $form['table' . $k]['actions'] = [
+      //        '#type' => 'actions',
+      //      ];
 
-      $form['table' . $k]['actions'] = [
-        '#type' => 'actions',
-      ];
-      $form['table' . $k]['actions']['add_fields'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Add Year'),
-        '#submit' => ['::addRow'],
-        '#attributes' => [
-          'id' => [
-            'add' . $k,
-          ],
-        ],
-        // '#ajax' => [
-        //          'callback' => '::addCallback',
-        //          'event' => 'click',
-        //        ],
-      ];
       $form['table' . $k]['actions']['add_table'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add Table'),
@@ -463,7 +475,7 @@ class TheOne extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
     ];
-
+//    dump($form_state);
     return $form;
 
   }
@@ -568,15 +580,20 @@ class TheOne extends FormBase {
   /**
    * @todo comments.
    */
-  public function addRow(array &$form, FormStateInterface $form_state) {
-    $triggeringElement = $form_state->getTriggeringElement();
+  public function addRow(array $form, FormStateInterface $form_state) {
+//    $triggeringElement = $form_state->getTriggeringElement();
     $tab = $form_state->get('tab');
-    $row = $form_state->get(['table1', 1]);
+    $post = substr($_POST['op'], 8);
     for ($k = 1; $k <= $tab; $k++) {
-      if ($triggeringElement['#attributes']['id'][0] == 'add' . $k) {
-        $form_state->setValue(['table' . $k, 2], $row);
+
+     $row = $form_state->get(['table', $k]);
+      if ($k == $post) {
+        echo 'it workdkgddddddddddddddddddd';
+        $row++;
+        $form_state->set(['table', $k], $row);
       }
     }
+    dump($form_state);
     $form_state->setRebuild();
   }
 
