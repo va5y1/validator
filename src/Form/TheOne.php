@@ -145,7 +145,7 @@ class TheOne extends FormBase {
       // if($table[$k] == $k){
       //        echo "GOOOOOOOOOOOOOOOD";
       //      }.
-      for ($i = 1; $i <= $form_state->get(['table', $k]); $i++) {
+      for ($i = ($form_state->get(['table', $k])); $i > 0; $i--) {
         $form['table' . $k][$i]['#attributes'] = [
           'class' => [
             'foo',
@@ -155,7 +155,7 @@ class TheOne extends FormBase {
 
         $form['table' . $k][$i]['Years'] = [
           '#type' => 'textfield',
-          '#value' => 2019 - 1,
+          '#value' => 2020 - $i,
           '#disabled' => TRUE,
           '#title' => $this
             ->t("Year"),
@@ -176,275 +176,275 @@ class TheOne extends FormBase {
             ],
           ],
         ];
+
+        $form['table' . $k][$i]['Feb'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Mar'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q1Callback',
+            'wrapper' => 'edit-outputQ1' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Q1'] = [
+          '#type' => 'number',
+          '#disabled' => TRUE,
+          '#default_value' => 0,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::YTDCallback',
+            'wrapper' => 'edit-outputYTD' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+            'id' => [
+              'edit-outputQ1' . $k . 1,
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Apr'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['May'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Jun'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q2Callback',
+            'wrapper' => 'edit-outputQ2' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Q2'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+            'id' => [
+              'edit-outputQ2' . $k . 1,
+            ],
+          ],
+          '#ajax' => [
+            'callback' => '::YTDCallback',
+            'wrapper' => 'edit-outputYTD' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Jul'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Aug'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Sept'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q3Callback',
+            'wrapper' => 'edit-outputQ3' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Q3'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => TRUE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+            'id' => [
+              'edit-outputQ3' . $k . 1,
+            ],
+          ],
+          '#ajax' => [
+            'callback' => '::YTDCallback',
+            'wrapper' => 'edit-outputYTD' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Oct'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Nov'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Dec'] = [
+          '#type' => 'number',
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#ajax' => [
+            'callback' => '::Q4Callback',
+            'wrapper' => 'edit-outputQ4' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['Q4'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => FALSE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+            'id' => [
+              'edit-outputQ4' . $k . 1,
+            ],
+
+          ],
+          '#ajax' => [
+            'callback' => '::YTDCallback',
+            'wrapper' => 'edit-outputYTD' . $k . 1,
+            'event' => 'change',
+            'progress' => [
+              'type' => 'none',
+            ],
+          ],
+        ];
+        $form['table' . $k][$i]['YTD'] = [
+          '#type' => 'number',
+          '#value' => 0,
+          '#disabled' => FALSE,
+          '#title' => $this
+            ->t("title"),
+          '#title_display' => 'invisible',
+          '#attributes' => [
+            'class' => [
+              'quartal',
+            ],
+            'id' => [
+              'edit-outputYTD' . $k . 1,
+            ],
+          ],
+        ];
       }
-      $form['table' . $k][1]['Feb'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q1Callback',
-          'wrapper' => 'edit-outputQ1' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Mar'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q1Callback',
-          'wrapper' => 'edit-outputQ1' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Q1'] = [
-        '#type' => 'number',
-        '#disabled' => TRUE,
-        '#default_value' => 0,
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::YTDCallback',
-          'wrapper' => 'edit-outputYTD' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-        '#attributes' => [
-          'class' => [
-            'quartal',
-          ],
-          'id' => [
-            'edit-outputQ1' . $k . 1,
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Apr'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q2Callback',
-          'wrapper' => 'edit-outputQ2' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['May'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q2Callback',
-          'wrapper' => 'edit-outputQ2' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Jun'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q2Callback',
-          'wrapper' => 'edit-outputQ2' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Q2'] = [
-        '#type' => 'number',
-        '#value' => 0,
-        '#disabled' => TRUE,
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#attributes' => [
-          'class' => [
-            'quartal',
-          ],
-          'id' => [
-            'edit-outputQ2' . $k . 1,
-          ],
-        ],
-        '#ajax' => [
-          'callback' => '::YTDCallback',
-          'wrapper' => 'edit-outputYTD' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Jul'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q3Callback',
-          'wrapper' => 'edit-outputQ3' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Aug'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q3Callback',
-          'wrapper' => 'edit-outputQ3' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Sept'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q3Callback',
-          'wrapper' => 'edit-outputQ3' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Q3'] = [
-        '#type' => 'number',
-        '#value' => 0,
-        '#disabled' => TRUE,
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#attributes' => [
-          'class' => [
-            'quartal',
-          ],
-          'id' => [
-            'edit-outputQ3' . $k . 1,
-          ],
-        ],
-        '#ajax' => [
-          'callback' => '::YTDCallback',
-          'wrapper' => 'edit-outputYTD' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Oct'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q4Callback',
-          'wrapper' => 'edit-outputQ4' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Nov'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q4Callback',
-          'wrapper' => 'edit-outputQ4' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Dec'] = [
-        '#type' => 'number',
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#ajax' => [
-          'callback' => '::Q4Callback',
-          'wrapper' => 'edit-outputQ4' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['Q4'] = [
-        '#type' => 'number',
-        '#value' => 0,
-        '#disabled' => FALSE,
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#attributes' => [
-          'class' => [
-            'quartal',
-          ],
-          'id' => [
-            'edit-outputQ4' . $k . 1,
-          ],
-
-        ],
-        '#ajax' => [
-          'callback' => '::YTDCallback',
-          'wrapper' => 'edit-outputYTD' . $k . 1,
-          'event' => 'change',
-          'progress' => [
-            'type' => 'none',
-          ],
-        ],
-      ];
-      $form['table' . $k][1]['YTD'] = [
-        '#type' => 'number',
-        '#value' => 0,
-        '#disabled' => FALSE,
-        '#title' => $this
-          ->t("title"),
-        '#title_display' => 'invisible',
-        '#attributes' => [
-          'class' => [
-            'quartal',
-          ],
-          'id' => [
-            'edit-outputYTD' . $k . 1,
-          ],
-        ],
-      ];
-
       // $form['table' . $k]['actions'] = [
       //        '#type' => 'actions',
       //      ];
@@ -588,12 +588,10 @@ class TheOne extends FormBase {
 
      $row = $form_state->get(['table', $k]);
       if ($k == $post) {
-        echo 'it workdkgddddddddddddddddddd';
         $row++;
         $form_state->set(['table', $k], $row);
       }
     }
-    dump($form_state);
     $form_state->setRebuild();
   }
 
