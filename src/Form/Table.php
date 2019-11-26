@@ -2,7 +2,6 @@
 
 namespace Drupal\Validator\Form;
 
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -60,16 +59,11 @@ class Table extends FormBase {
         '#type' => 'submit',
         '#value' => 'Add Year' . $k,
         '#submit' => ['::addRow'],
-//        '#attributes' => [
-//          'id' => [
-//            'add' . $k,
-//          ],
-//        ],
-//        '#ajax' => [
-//          'callback' => '::addRowCallback',
-//          'event' => 'click',
-//          'wrapper' => 'table-module',
-//        ],
+        // '#ajax' => [
+        //          'callback' => '::addRowCallback',
+        //          'event' => 'click',
+        //          'wrapper' => 'table' . $k,
+        //        ],
       ];
       $form['table' . $k] = [
         '#type' => 'table',
@@ -97,6 +91,7 @@ class Table extends FormBase {
           'class' => [
             'mytable',
           ],
+          'id' => 'table' . $k,
         ],
       ];
 
@@ -120,7 +115,6 @@ class Table extends FormBase {
         $form['table' . $k][$i]['Q1'] = [
           '#type' => 'number',
           '#disabled' => TRUE,
-          '#default_value' => 0,
         ];
         for ($m = 4; $m < 7; $m++) {
           $form['table' . $k][$i][$m] = [
@@ -130,7 +124,6 @@ class Table extends FormBase {
         $form['table' . $k][$i]['Q2'] = [
           '#type' => 'number',
           '#disabled' => TRUE,
-          '#default_value' => 0,
         ];
         for ($m = 7; $m < 10; $m++) {
           $form['table' . $k][$i][$m] = [
@@ -140,7 +133,6 @@ class Table extends FormBase {
         $form['table' . $k][$i]['Q3'] = [
           '#type' => 'number',
           '#disabled' => TRUE,
-          '#default_value' => 0,
         ];
         for ($m = 10; $m < 13; $m++) {
           $form['table' . $k][$i][$m] = [
@@ -150,12 +142,10 @@ class Table extends FormBase {
         $form['table' . $k][$i]['Q4'] = [
           '#type' => 'number',
           '#disabled' => TRUE,
-          '#default_value' => 0,
         ];
         $form['table' . $k][$i]['YTD'] = [
           '#type' => 'number',
           '#disabled' => TRUE,
-          '#default_value' => 0,
         ];
       } //end for $i
 
@@ -164,11 +154,11 @@ class Table extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Add Table'),
       '#submit' => ['::addTable'],
-//      '#ajax' => [
-//        'callback' => '::addTableCallback',
-//        'event' => 'click',
-//        'wrapper' => 'table-module',
-//      ],
+      // '#ajax' => [
+      //            'callback' => '::addTableCallback',
+      //            'event' => 'click',
+      //            'wrapper' => 'table-module',
+      //          ],
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -202,12 +192,44 @@ class Table extends FormBase {
     }
     $form_state->setRebuild();
   }
-  public function addTableCallback (array &$form, FormStateInterface $form_state) {
+
+  /**
+   *
+   */
+  public function addTableCallback(array &$form, FormStateInterface $form_state) {
     return $form;
   }
-  public function addRowCallback (array &$form, FormStateInterface $form_state) {
-    return $form;
+
+  /**
+   *
+   */
+  public function addRowCallback(array &$form, FormStateInterface $form_state) {
+    return $form['table1'];
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $tables = $form_state->get('tab');
+    $a = ($form_state->getValues());
+    // Echo $tables;.
+    for ($k = 1; $k <= $tables; $k++) {
+      // $form_state->setError($form['table1'], $this->t('Invalid:('));
+      $values[$k] = $a['table' . $k];
+      foreach ($values as $tab => $rows) {
+        foreach ($rows as $row => $value) {
+          foreach ($value as $number => $input) {
+            echo $number . "as" . $input . "/////////";
+
+          }
+
+        }
+
+      }
+    }
+  }
+
   /**
    * Form submission handler.
    *
@@ -217,6 +239,15 @@ class Table extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitForm() method.
+    $status = $form_state->get('status');
+    if ($status == FALSE) {
+      $this->messenger()->addError('Invalid!;(');
+      $form_state->setRebuild();
+    }
+    else {
+      $this->messenger()->addMessage('Valid:!');
+    }
+
   }
+
 }

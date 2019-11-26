@@ -29,7 +29,7 @@ validator.formclass:
 validator.table:
   path: '/validation'
   defaults:
-    _title: 'Form'
+    _title: 'Form validation for your needs'
     _form: 'Drupal\validator\Form\Table'
   requirements:
     _permission: 'access content'
