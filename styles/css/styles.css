@@ -15,7 +15,8 @@
   background-color: #b5b5b5;
   color: #3900ff;
 }
-#table-module .mytable .quartal {
+#table-module .mytable .quart,
+#table-module .mytable .ytd{
   background: darkgray;
   padding: 3px;
 }

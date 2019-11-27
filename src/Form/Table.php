@@ -111,6 +111,7 @@ class Table extends FormBase {
           $form['table' . $k][$i][$m] = [
             '#type' => 'number',
             '#min' => 0,
+            '#step' => 0.01,
             '#attributes' => [
               'class' => ['form-edit-month'],
             ],
@@ -118,15 +119,18 @@ class Table extends FormBase {
         }
         $form['table' . $k][$i]['Q1'] = [
           '#type' => 'number',
-          '#disabled' => TRUE,
+          '#step' => 0.01,
           '#attributes' => [
-            'class' => ['q1'],
+            'class' => ['q1',
+              'quart',
+            ],
           ],
         ];
         for ($m = 4; $m < 7; $m++) {
           $form['table' . $k][$i][$m] = [
             '#type' => 'number',
             '#min' => 0,
+            '#step' => 0.01,
             '#attributes' => [
               'class' => ['form-edit-month'],
             ],
@@ -134,14 +138,17 @@ class Table extends FormBase {
         }
         $form['table' . $k][$i]['Q2'] = [
           '#type' => 'number',
-          '#disabled' => TRUE,
+          '#step' => 0.01,
           '#attributes' => [
-            'class' => ['q2'],
+            'class' => ['q2',
+              'quart',
+            ],
           ],
         ];
         for ($m = 7; $m < 10; $m++) {
           $form['table' . $k][$i][$m] = [
             '#type' => 'number',
+            '#step' => 0.01,
             '#min' => 0,
             '#attributes' => [
               'class' => ['form-edit-month'],
@@ -150,14 +157,17 @@ class Table extends FormBase {
         }
         $form['table' . $k][$i]['Q3'] = [
           '#type' => 'number',
-          '#disabled' => TRUE,
+          '#step' => 0.01,
           '#attributes' => [
-            'class' => ['q3'],
+            'class' => ['q3',
+              'quart',
+            ],
           ],
         ];
         for ($m = 10; $m < 13; $m++) {
           $form['table' . $k][$i][$m] = [
             '#type' => 'number',
+            '#step' => 0.01,
             '#min' => 0,
             '#attributes' => [
               'class' => ['form-edit-month'],
@@ -166,14 +176,16 @@ class Table extends FormBase {
         }
         $form['table' . $k][$i]['Q4'] = [
           '#type' => 'number',
-          '#disabled' => TRUE,
+          '#step' => 0.01,
           '#attributes' => [
-            'class' => ['q4'],
+            'class' => ['q4',
+              'quart',
+            ],
           ],
         ];
         $form['table' . $k][$i]['YTD'] = [
           '#type' => 'number',
-          '#disabled' => TRUE,
+          '#step' => 0.01,
           '#attributes' => [
             'class' => ['ytd'],
           ],
@@ -260,8 +272,7 @@ class Table extends FormBase {
         }
       }
     }
-    // var_dump($values);
-    var_dump($userInput);
+    var_dump($values);
     for ($k = 1; $k <= $tables; $k++) {
       $countOfRows += count($userInput[$k]);
 
