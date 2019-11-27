@@ -114,6 +114,9 @@ class Table extends FormBase
                     $form['table' . $k][$i][$m] = [
                     '#type' => 'number',
                     '#min' => 0,
+                    '#attributes' => [
+                    'class' => ['form-edit-month',],
+                    ],
                     ];
                 }
                 $form['table' . $k][$i]['Q1'] = [
@@ -127,6 +130,9 @@ class Table extends FormBase
                     $form['table' . $k][$i][$m] = [
                     '#type' => 'number',
                     '#min' => 0,
+                    '#attributes' => [
+                    'class' => ['form-edit-month',],
+                    ],
                     ];
                 }
                 $form['table' . $k][$i]['Q2'] = [
@@ -140,6 +146,9 @@ class Table extends FormBase
                     $form['table' . $k][$i][$m] = [
                     '#type' => 'number',
                     '#min' => 0,
+                    '#attributes' => [
+                    'class' => ['form-edit-month',],
+                    ],
                     ];
                 }
                 $form['table' . $k][$i]['Q3'] = [
@@ -153,6 +162,9 @@ class Table extends FormBase
                     $form['table' . $k][$i][$m] = [
                     '#type' => 'number',
                     '#min' => 0,
+                    '#attributes' => [
+                    'class' => ['form-edit-month',],
+                    ],
                     ];
                 }
                 $form['table' . $k][$i]['Q4'] = [
@@ -165,6 +177,9 @@ class Table extends FormBase
                 $form['table' . $k][$i]['YTD'] = [
                 '#type' => 'number',
                 '#disabled' => true,
+                '#attributes' => [
+                    'class' => ['ytd',],
+                    ],
                 ];
             } //end for $i
         } //end for $k
@@ -251,9 +266,9 @@ class Table extends FormBase
                 }
             }
         }
-        var_dump($values);
-        echo $countOfRows;
-        echo $countOfTables;
+        // var_dump($values);
+        // echo $countOfRows;
+        // echo $countOfTables;
     }
 
   /**

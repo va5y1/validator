@@ -1,27 +1,24 @@
-.mytable,
+#table-module .mytable,
 .table {
   border: 3px solid gray;
   margin-bottom: 7px;
 }
-.mytable th {
+#table-module .mytable th {
   background: gray;
   height: 35px;
 }
-.mytable .form-inline .form-control {
+#table-module .mytable .form-inline .form-control {
   width: 50px;
   padding: 1px;
 }
-.mytable .form-control[disabled] {
+#table-module .mytable .form-control[disabled] {
   background-color: #b5b5b5;
   color: #3900ff;
 }
-.mytable .quartal {
+#table-module .mytable .quartal {
   background: darkgray;
   padding: 3px;
 }
-.mytable .foo .form-inline{
+#table-module .mytable .foo .form-inline{
   padding: 1px; !important;
-}
-#add_table{
-
 }
