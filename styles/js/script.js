@@ -8,7 +8,7 @@ let queryQuart = document.querySelectorAll('input.quart');
 let queryYtd = document.querySelectorAll('input.ytd');
 
 
-for (let i = 0; i < queryMonth.length; i++) { // Переганяємо всі елементи ведення даних.
+for (let i = 0; i < queryMonth.length; i++) {
     if (isNaN(queryMonth[i].value)) {
         queryMonth[i].value = 0;
     }
@@ -52,18 +52,3 @@ for (let i = 0; i < queryMonth.length; i++) { // Переганяємо всі �
 
 
 }
-// for (let i = 0; i < queryQuart.length; i++) { // Переганяємо всі елементи
-// ведення даних. // if (isNaN(queryMonth[i].value)) { //   queryMonth[i].value
-// = 0; // } queryQuart[i].addEventListener('change', function () {
-// queryQuart[i].value = parseFloat(this.value); for (let j = 0; j <
-// queryYtd.length; j++) { // Загружаємо квартали. let getElem = []; //
-// Створюємо масив. getElem[j] = j * 4; // Заповнюємо масив (Тут будуть ключі
-// місяці квартала) if (isNaN(queryYtd[j].value)) { queryYtd[j].value = 0; }
-// let summa = ((queryQuart[getElem[j]].value)) * 1 + (queryQuart[getElem[j] +
-// 1].value) * 1 + (queryQuart[getElem[j] + 2].value) * 1 +
-// (queryQuart[getElem[j] + 3].value) * 1; queryYtd[j].value =
-// (Math.round(((summa + 1) / 4) * 100)) / 100; // queryQuart[j].value =
-// ((queryQuart[j].value + 1) / 3);.  }  });
-
-
-// }

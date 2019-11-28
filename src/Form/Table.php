@@ -284,13 +284,14 @@ class Table extends FormBase
                 return false;
             }
             $tables = $form_state->get('tab');
+            //отримуємо всі інпути:
             $a = ($form_state->getValues());
             $countOfTables = 0;
             $countOfRows = 0;
+            //перебір всіх значень і виключення квартальних і річних сум:
             for ($k = 1; $k <= $tables; $k++) {
                 $countOfTables++;
                 $values[$k] = $a['table' . $k];
-                $rowsInTable = count($values[$k]);
                 foreach ($values as $rows) {
                     foreach ($rows as $row => $value) {
                         if ($value['YTD'] != '') {
@@ -307,25 +308,32 @@ class Table extends FormBase
                                   $userInput[$k][$row][$number] = $input;
 
                             }
+                            //видалення комірок з пустими значеннями:
                             $results = array_filter($userInput[$k][$row], 'strlen');
+                            //валідація рядків:
                             $valid = check(array_keys($results));
+                            //якщо рядок не останній і має 12 місяць і валідний,
+                            //то продовжуємо перевіряти далі:
                             if (array_key_exists(12, $results) && $valid && $row != 1) {
                                 continue;
-                            } elseif ($valid && $row != 1) {
-                              $stan[$k][$row] = false;
+                                //якщо валідний, не останній, не перший але не
+                                // має 12 місяця, значить не підходить:
+                            } elseif ($valid && $row != 1 && $row != count($values[$k])) {
+                                $stan[$k][$row] = false;
+                                //якщо все інше не спрацювало отже весь ряд валідний:
                             } elseif ($valid) {
                                 $stan[$k][$row] = true;
                             } else {
                                 $stan[$k][$row] = false;
                             }
-                        } else {
+                        } else { //якщо рядок пустий то він валідний:
                             $stan[$k][$row] = true;
                         }
 
                     }
                 }
             }
-
+            //загальна валідність для кожної форми:
             $table = [];
             foreach ($stan as $tables) {
                 $rows = count($tables);
@@ -341,6 +349,7 @@ class Table extends FormBase
                     }
                 }
             }
+            //перевірка на валідність всіх форм разом:
             if(in_array(false, $table)) {
                 $form_state->set('status', false);
             } else {
@@ -349,7 +358,7 @@ class Table extends FormBase
             /*
              * Якщо в формі один рік,
              *  у всіх формах повинні бути заповненні значення
-             *  за однаковий період
+             *  за однаковий період:
              */
             for ($k = 1; $k <= $countOfTables; $k++) {
                 $countOfRows += count($values[$k]);
@@ -385,12 +394,13 @@ class Table extends FormBase
         $status = $form_state->get('status');
         if ($status === false) {
             $this->messenger()->addError('Invalid!;(');
-        }
-        elseif ($status === true) {
+        } elseif ($status === true) {
             $this->messenger()->addMessage('Valid:!');
-        }
-        else {
-            $this->messenger()->addWarning('Nothing coming(');
+        } else {
+            $this->messenger()->addWarning(
+                'I don`t know what to do
+             in this situation('
+            );
 
         }
         $form_state->setRebuild();
