@@ -290,12 +290,12 @@ class Table extends FormBase {
             if ($value['YTD'] != "") {
               foreach ($value as $number => $input) {
                 if (($number == 'Q1')
-                      || ($number == 'Q2')
-                      || ($number == 'Q3')
-                      || ($number == 'Q4')
-                      || ($number == 'YTD')
-                      || ($number == 'Years')
-                  ) {
+                  || ($number == 'Q2')
+                  || ($number == 'Q3')
+                  || ($number == 'Q4')
+                  || ($number == 'YTD')
+                  || ($number == 'Years')
+                ) {
                   continue;
                 }
                 $userInput[$k][$row][$number] = $input;
@@ -363,9 +363,9 @@ class Table extends FormBase {
           }
         }
       }
-      for ($k = 1; $k <= $countOfTables; $k++) {
-        $countOfRows += count($values[$k]);
-      }
+      // For ($k = 1; $k <= $countOfTables; $k++) {
+      //        $countOfRows[$k] = $values[$k];
+      //      }
       // перевірка на валідність всіх форм разом:
       if (in_array(FALSE, $table)) {
         $form_state->set('status', FALSE);
@@ -376,20 +376,28 @@ class Table extends FormBase {
        *  за однаковий період:
        */
       else {
-        if ($countOfTables == $countOfRows) {
-          if ($countOfTables > 1) {
-            for ($i = 2; $i <= $countOfTables; $i++) {
-              $diff = array_diff_assoc($values[$i - 1][1], $values[$i][1]);
+        if ($countOfTables > 1) {
+          for ($i = 1; $i < $countOfTables; $i++) {
+            foreach ($values[$i] as $key => $rows) {
+              if (!isset($values[1][$key]) || !isset($values[$i + 1][$key])) {
+                // $form_state->set('status', TRUE);
+                continue;
+              }
+              elseif (!isset($userInput[1][$key]) || !isset($userInput[$i + 1][$key])) {
+                // $form_state->set('status', TRUE);
+                continue;
+              }
+              elseif (count(array_filter($userInput[1][$key], 'strlen')) != count(array_filter($userInput[$i + 1][$key]))) {
+                // $c = arry_afilter($userInput[1][$key], 'strlen');
+                // $d = array_filter($userInput[$i + 1][$key], 'strlen');
+                $form_state->set('status', FALSE);
+                break;
+              }
+              else {
+                $form_state->set('status', TRUE);
+              }
+
             }
-            if (empty($diff)) {
-              $form_state->set('status', TRUE);
-            }
-            else {
-              $form_state->set('status', FALSE);
-            }
-          }
-          else {
-            $form_state->set('status', TRUE);
           }
 
         }
