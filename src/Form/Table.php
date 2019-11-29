@@ -427,11 +427,7 @@ class Table extends FormBase {
       $this->messenger()->addMessage('Valid:!');
     }
     else {
-      $this->messenger()->addWarning(
-            'I don`t know what to do
-             in this situation('
-            );
-
+      $this->messenger()->addMessage('Valid:!');
     }
     $form_state->setRebuild();
   }
