@@ -265,16 +265,6 @@ class Table extends FormBase {
        *
        * @return bool
        */
-      function check(array $numbers, $prev = NULL) {
-        if (empty($numbers)) {
-          return TRUE;
-        }
-        $current = array_shift($numbers);
-        if ($prev == NULL || $current === $prev + 1) {
-          return check($numbers, $current);
-        }
-        return FALSE;
-      }
 
       $tables = $form_state->get('tab');
       // отримуємо всі інпути:
