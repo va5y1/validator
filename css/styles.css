@@ -16,19 +16,19 @@ input.form-file,
 input.form-number,
 input.form-color,
 textarea.form-textarea,
-#validator-module .mytable .form-inline .form-control {
+#validator-module .my-table .form-inline .form-control {
   width: 50px;
   padding: 1px;
 }
-#validator-module .mytable .form-control[disabled] {
+#validator-module .my-table .form-control[disabled] {
   background-color: #b5b5b5;
   color: #3900ff;
 }
-#validator-module .mytable .quart,
-#validator-module .mytable .ytd {
+#validator-module .my-table .quart,
+#validator-module .my-table .ytd {
   background: darkgray;
   padding: 3px;
 }
-#validator-module .mytable .foo .form-inline {
+#validator-module .my-table .foo .form-inline {
   padding: 1px; !important;
 }

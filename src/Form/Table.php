@@ -21,15 +21,7 @@ class Table extends FormBase {
   }
 
   /**
-   * Form constructor.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return array
-   *   The form structure.
+   * @inheritDoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Кількість таблиць у формі по дефолту.
@@ -60,34 +52,35 @@ class Table extends FormBase {
       }
       $form['add_fields' . $k] = [
         '#type' => 'submit',
-        '#value' => 'Add Year' . $k,
+        '#value' => 'Add Year',
+        '#row' => $k,
         '#submit' => ['::addRow'],
       ];
       $form['table' . $k] = [
         '#type' => 'table',
         '#header' => [
-          t('Year'),
-          t('Jan'),
-          t('Feb'),
-          t('Mar'),
-          t('Q1'),
-          t('Apr'),
-          t('May'),
-          t('Jun'),
-          t('Q2'),
-          t('Jul'),
-          t('Aug'),
-          t('Sept'),
-          t('Q3'),
-          t('Oct'),
-          t('Nov'),
-          t('Dec'),
-          t('Q4'),
-          t('YTD'),
+          $this->t('Year'),
+          $this->t('Jan'),
+          $this->t('Feb'),
+          $this->t('Mar'),
+          $this->t('Q1'),
+          $this->t('Apr'),
+          $this->t('May'),
+          $this->t('Jun'),
+          $this->t('Q2'),
+          $this->t('Jul'),
+          $this->t('Aug'),
+          $this->t('Sept'),
+          $this->t('Q3'),
+          $this->t('Oct'),
+          $this->t('Nov'),
+          $this->t('Dec'),
+          $this->t('Q4'),
+          $this->t('YTD'),
         ],
         '#attributes' => [
           'class' => [
-            'mytable',
+            'my-table',
           ],
           'id' => 'table' . $k,
         ],
@@ -192,17 +185,12 @@ class Table extends FormBase {
             'class' => ['ytd'],
           ],
         ];
-      } //end for $i
-    } //end for $k
+      }
+    }
     $form['actions']['add_table'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add Table'),
       '#submit' => ['::addTable'],
-      // '#ajax' => [
-      //            'callback' => '::addTableCallback',
-      //            'event' => 'click',
-      //            'wrapper' => 'table-module',
-      //          ],
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -226,10 +214,10 @@ class Table extends FormBase {
    */
   public function addRow(array $form, FormStateInterface $form_state) {
     $tab = $form_state->get('tab');
-    $post = substr($_POST['op'], 8);
+    $position = $form_state->getTriggeringElement();
     for ($k = 1; $k <= $tab; $k++) {
       $row = $form_state->get(['table', $k]);
-      if ($k == $post) {
+      if ($k == $position['#row']) {
         $row++;
         $form_state->set(['table', $k], $row);
       }
@@ -405,7 +393,8 @@ class Table extends FormBase {
     $status = $form_state->get('status');
     if ($status === FALSE) {
       $this->messenger()->addError('Invalid!;(');
-    } else {
+    }
+    else {
       $this->messenger()->addMessage('Valid:!');
     }
     $form_state->setRebuild();
