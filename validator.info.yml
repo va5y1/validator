@@ -1,4 +1,4 @@
-name: validator
+name: Validator
 type: module
 description: This module can validate table or do something important
 package: Custom

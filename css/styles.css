@@ -1,9 +1,9 @@
-#table-module .mytable,
+#validator-module .mytable,
 .table {
   border: 3px solid gray;
   margin-bottom: 7px;
 }
-#table-module .mytable th {
+#validator-module .mytable th {
   background: gray;
   height: 35px;
 }
@@ -16,19 +16,19 @@ input.form-file,
 input.form-number,
 input.form-color,
 textarea.form-textarea,
-#table-module .mytable .form-inline .form-control {
+#validator-module .mytable .form-inline .form-control {
   width: 50px;
   padding: 1px;
 }
-#table-module .mytable .form-control[disabled] {
+#validator-module .mytable .form-control[disabled] {
   background-color: #b5b5b5;
   color: #3900ff;
 }
-#table-module .mytable .quart,
-#table-module .mytable .ytd {
+#validator-module .mytable .quart,
+#validator-module .mytable .ytd {
   background: darkgray;
   padding: 3px;
 }
-#table-module .mytable .foo .form-inline {
+#validator-module .mytable .foo .form-inline {
   padding: 1px; !important;
 }

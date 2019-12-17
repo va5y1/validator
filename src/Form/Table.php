@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Validator\Form;
+namespace Drupal\validator\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,7 +17,7 @@ class Table extends FormBase {
    *   The unique string identifying the form.
    */
   public function getFormId() {
-    return 'table_module';
+    return 'validator_module';
   }
 
   /**
@@ -36,13 +36,16 @@ class Table extends FormBase {
     $tab = $form_state->get('tab');
     // Переконуємось що як мінімум одна.
     if ($tab === NULL) {
-      $tab_field = $form_state->set('tab', 1);
+      $form_state->set('tab', 1);
       $tab = 1;
     }
 
     $form['description'] = [
       '#type' => 'item',
       '#markup' => $this->t('This table make wonderful things'),
+    ];
+    $form['#attached'] = [
+      'library' => 'validator/validator.style',
     ];
 
     $form['#tree'] = TRUE;
@@ -52,18 +55,13 @@ class Table extends FormBase {
       $table[$k] = $form_state->get(['table', $k]);
       // Перевіряємо щоб дефолтне значення рядків було 1.
       if ($table[$k] === NULL) {
-        $row = $form_state->set(['table', $k], 1);
+        $form_state->set(['table', $k], 1);
         $table[$k] = 1;
       }
       $form['add_fields' . $k] = [
         '#type' => 'submit',
         '#value' => 'Add Year' . $k,
         '#submit' => ['::addRow'],
-        // '#ajax' => [
-        //          'callback' => '::addRowCallback',
-        //          'event' => 'click',
-        //          'wrapper' => 'table' . $k,
-        //        ],
       ];
       $form['table' . $k] = [
         '#type' => 'table',
@@ -240,20 +238,6 @@ class Table extends FormBase {
   }
 
   /**
-   *
-   */
-  public function addTableCallback(array &$form, FormStateInterface $form_state) {
-    return $form;
-  }
-
-  /**
-   *
-   */
-  public function addRowCallback(array &$form, FormStateInterface $form_state) {
-    return $form['table1'];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -265,12 +249,21 @@ class Table extends FormBase {
        *
        * @return bool
        */
+      function check(array $numbers, $prev = NULL) {
+        if (empty($numbers)) {
+          return TRUE;
+        }
+        $current = array_shift($numbers);
+        if ($prev == NULL || $current === $prev + 1) {
+          return check($numbers, $current);
+        }
+        return FALSE;
+      }
 
       $tables = $form_state->get('tab');
       // отримуємо всі інпути:
       $a = ($form_state->getValues());
       $countOfTables = 0;
-      $countOfRows = 0;
       // перебір всіх значень і виключення квартальних і річних сум:
       for ($k = 1; $k <= $tables; $k++) {
         $countOfTables++;
@@ -412,11 +405,7 @@ class Table extends FormBase {
     $status = $form_state->get('status');
     if ($status === FALSE) {
       $this->messenger()->addError('Invalid!;(');
-    }
-    elseif ($status === TRUE) {
-      $this->messenger()->addMessage('Valid:!');
-    }
-    else {
+    } else {
       $this->messenger()->addMessage('Valid:!');
     }
     $form_state->setRebuild();

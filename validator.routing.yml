@@ -1,4 +1,4 @@
-validator.table:
+validator.form:
   path: '/validation'
   defaults:
     _title: 'Form validation for your needs'
