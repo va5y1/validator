@@ -55,6 +55,9 @@ class Table extends FormBase {
         '#value' => 'Add Year',
         '#row' => $k,
         '#submit' => ['::addRow'],
+        '#attributes' => [
+          'id' => 'my-row' . $k,
+        ],
       ];
       $form['table' . $k] = [
         '#type' => 'table',
