@@ -226,28 +226,27 @@ class Table extends FormBase {
   }
 
   /**
+   * @param array $numbers
+   * @param null $prev
+   *
+   * @return bool
+   */
+  public static function check(array $numbers, $prev = NULL) {
+    if (empty($numbers)) {
+      return TRUE;
+    }
+    $current = array_shift($numbers);
+    if ($prev == NULL || $current === $prev + 1) {
+      return self::check($numbers, $current);
+    }
+    return FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($_POST['op'] == 'Submit') {
-
-      /**
-       * @param array $numbers
-       * @param null $prev
-       *
-       * @return bool
-       */
-      function check(array $numbers, $prev = NULL) {
-        if (empty($numbers)) {
-          return TRUE;
-        }
-        $current = array_shift($numbers);
-        if ($prev == NULL || $current === $prev + 1) {
-          return check($numbers, $current);
-        }
-        return FALSE;
-      }
-
       $tables = $form_state->get('tab');
       // отримуємо всі інпути:
       $a = ($form_state->getValues());
@@ -275,7 +274,7 @@ class Table extends FormBase {
               // видалення комірок з пустими значеннями:
               $results = array_filter($userInput[$k][$row], 'strlen');
               // валідація рядків:
-              $valid = check(array_keys($results));
+              $valid = self::check(array_keys($results));
               // якщо рядок не останній і має 12 місяць і валідний,
               // то продовжуємо перевіряти далі:
               if (array_key_exists(12, $results) && $valid && $row != 1) {
@@ -334,14 +333,11 @@ class Table extends FormBase {
           }
         }
       }
-      // For ($k = 1; $k <= $countOfTables; $k++) {
-      //        $countOfRows[$k] = $values[$k];
-      //      }
       // перевірка на валідність всіх форм разом:
       if (in_array(FALSE, $table)) {
         $form_state->set('status', FALSE);
       }
-      /*
+      /**
        * Якщо в формі один рік,
        *  у всіх формах повинні бути заповненні значення
        *  за однаковий період:
