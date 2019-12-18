@@ -54,6 +54,7 @@ class Table extends FormBase {
         '#type' => 'submit',
         '#value' => 'Add Year',
         '#row' => $k,
+        '#name' =>  $k,
         '#submit' => ['::addRow'],
         '#attributes' => [
           'id' => 'my-row' . $k,
@@ -220,7 +221,7 @@ class Table extends FormBase {
     $position = $form_state->getTriggeringElement();
     for ($k = 1; $k <= $tab; $k++) {
       $row = $form_state->get(['table', $k]);
-      if ($k == $position['#row']) {
+      if ($k == $position['#name']) {
         $row++;
         $form_state->set(['table', $k], $row);
       }
@@ -249,7 +250,8 @@ class Table extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($_POST['op'] == 'Submit') {
+    $submit = $form_state->getTriggeringElement();
+    if ($submit['#value'] == 'Submit') {
       $tables = $form_state->get('tab');
       // отримуємо всі інпути:
       $a = ($form_state->getValues());
