@@ -6,7 +6,9 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * This Form checks user data. We extend FormBase.
  *
+ * @see \Drupal\Core\Form\FormBase
  */
 class Table extends FormBase {
 
@@ -21,12 +23,11 @@ class Table extends FormBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // Кількість таблиць у формі по дефолту.
+    // Count of tables.
     $tab = $form_state->get('tab');
-    // Переконуємось що як мінімум одна.
     if ($tab === NULL) {
       $form_state->set('tab', 1);
       $tab = 1;
@@ -41,11 +42,10 @@ class Table extends FormBase {
     ];
 
     $form['#tree'] = TRUE;
-    // Цикл відповідає за кількість таблиць.
+    // Rendering tables.
     for ($k = 1; $k <= $tab; $k++) {
-      // Масив зберігає значення таблиця => кількість рядків.
+      // Array contains table => row.
       $table[$k] = $form_state->get(['table', $k]);
-      // Перевіряємо щоб дефолтне значення рядків було 1.
       if ($table[$k] === NULL) {
         $form_state->set(['table', $k], 1);
         $table[$k] = 1;
@@ -53,8 +53,7 @@ class Table extends FormBase {
       $form['add_fields' . $k] = [
         '#type' => 'submit',
         '#value' => 'Add Year',
-        '#row' => $k,
-        '#name' =>  $k,
+        '#name' => $k,
         '#submit' => ['::addRow'],
         '#attributes' => [
           'id' => 'my-row' . $k,
@@ -86,10 +85,9 @@ class Table extends FormBase {
           'class' => [
             'my-table',
           ],
-          'id' => 'table' . $k,
         ],
       ];
-
+      // Rendering rows.
       for ($i = ($form_state->get(['table', $k])); $i > 0; $i--) {
         $form['table' . $k][$i]['#attributes'] = [
           'class' => [
@@ -102,7 +100,7 @@ class Table extends FormBase {
           '#value' => 2020 - $i,
           '#disabled' => TRUE,
         ];
-        for ($m = 1; $m < 4; $m++) {
+        for ($m = 1; $m <= 12; $m++) {
           $form['table' . $k][$i][$m] = [
             '#type' => 'number',
             '#min' => 0,
@@ -111,77 +109,19 @@ class Table extends FormBase {
               'class' => ['form-edit-month'],
             ],
           ];
+          if ($m % 3 == 0) {
+            $form['table' . $k][$i]['Q' . $m] = [
+              '#type' => 'number',
+              '#step' => 0.01,
+              '#attributes' => [
+                'class' => [
+                  'q1',
+                  'quart',
+                ],
+              ],
+            ];
+          }
         }
-        $form['table' . $k][$i]['Q1'] = [
-          '#type' => 'number',
-          '#step' => 0.01,
-          '#attributes' => [
-            'class' => [
-              'q1',
-              'quart',
-            ],
-          ],
-        ];
-        for ($m = 4; $m < 7; $m++) {
-          $form['table' . $k][$i][$m] = [
-            '#type' => 'number',
-            '#min' => 0,
-            '#step' => 0.01,
-            '#attributes' => [
-              'class' => ['form-edit-month'],
-            ],
-          ];
-        }
-        $form['table' . $k][$i]['Q2'] = [
-          '#type' => 'number',
-          '#step' => 0.01,
-          '#attributes' => [
-            'class' => [
-              'q2',
-              'quart',
-            ],
-          ],
-        ];
-        for ($m = 7; $m < 10; $m++) {
-          $form['table' . $k][$i][$m] = [
-            '#type' => 'number',
-            '#step' => 0.01,
-            '#min' => 0,
-            '#attributes' => [
-              'class' => ['form-edit-month'],
-            ],
-          ];
-        }
-        $form['table' . $k][$i]['Q3'] = [
-          '#type' => 'number',
-          '#step' => 0.01,
-          '#attributes' => [
-            'class' => [
-              'q3',
-              'quart',
-            ],
-          ],
-        ];
-        for ($m = 10; $m < 13; $m++) {
-          $form['table' . $k][$i][$m] = [
-            '#type' => 'number',
-            '#step' => 0.01,
-            '#min' => 0,
-            '#attributes' => [
-              'class' => ['form-edit-month'],
-            ],
-          ];
-        }
-        $form['table' . $k][$i]['Q4'] = [
-          '#type' => 'number',
-          '#step' => 0.01,
-          '#attributes' => [
-            'class' => [
-              'q4',
-              'quart',
-            ],
-          ],
-        ];
         $form['table' . $k][$i]['YTD'] = [
           '#type' => 'number',
           '#step' => 0.01,
@@ -205,6 +145,11 @@ class Table extends FormBase {
 
   /**
    * Adding new table.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function addTable(array $form, FormStateInterface $form_state) {
     $table_field = $form_state->get('tab');
@@ -215,6 +160,11 @@ class Table extends FormBase {
 
   /**
    * Adding new rows.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function addRow(array $form, FormStateInterface $form_state) {
     $tab = $form_state->get('tab');
@@ -230,12 +180,17 @@ class Table extends FormBase {
   }
 
   /**
+   * Checks the array for a break.
+   *
    * @param array $numbers
-   * @param null $prev
+   *   Inputted values.
+   * @param int $prev
+   *   Default value.
    *
    * @return bool
+   *   True or false.
    */
-  public static function check(array $numbers, $prev = NULL) {
+  public static function check(array $numbers, int $prev = NULL) {
     if (empty($numbers)) {
       return TRUE;
     }
@@ -253,21 +208,20 @@ class Table extends FormBase {
     $submit = $form_state->getTriggeringElement();
     if ($submit['#value'] == 'Submit') {
       $tables = $form_state->get('tab');
-      // отримуємо всі інпути:
+      // Get all user inputs.
       $a = ($form_state->getValues());
-      $countOfTables = 0;
       // перебір всіх значень і виключення квартальних і річних сум:
       for ($k = 1; $k <= $tables; $k++) {
-        $countOfTables++;
+        $countOfTables = $k;
         $values[$k] = $a['table' . $k];
         foreach ($values as $rows) {
           foreach ($rows as $row => $value) {
             if ($value['YTD'] != "") {
               foreach ($value as $number => $input) {
-                if (($number == 'Q1')
-                  || ($number == 'Q2')
-                  || ($number == 'Q3')
-                  || ($number == 'Q4')
+                if (($number == 'Q3')
+                  || ($number == 'Q6')
+                  || ($number == 'Q9')
+                  || ($number == 'Q12')
                   || ($number == 'YTD')
                   || ($number == 'Years')
                 ) {
@@ -396,7 +350,7 @@ class Table extends FormBase {
       $this->messenger()->addError('Invalid!;(');
     }
     else {
-      $this->messenger()->addMessage('Valid:!');
+      $this->messenger()->addMessage('Valid^,^');
     }
     $form_state->setRebuild();
   }
