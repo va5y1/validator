@@ -208,31 +208,24 @@ class Table extends FormBase {
     $submit = $form_state->getTriggeringElement();
     if ($submit['#value'] == 'Submit') {
       $tables = $form_state->get('tab');
-      // Get all user inputs.
-      $a = ($form_state->getValues());
-      // перебір всіх значень і виключення квартальних і річних сум:
+      // Get all users input.
+      $get_input = ($form_state->getValues());
+      // Filtering array from quartals and years.
       for ($k = 1; $k <= $tables; $k++) {
-        $countOfTables = $k;
-        $values[$k] = $a['table' . $k];
+        $count_of_tables = $k;
+        $values[$k] = $get_input['table' . $k];
         foreach ($values as $rows) {
           foreach ($rows as $row => $value) {
+            // If row is empty than its valid:
             if ($value['YTD'] != "") {
-              foreach ($value as $number => $input) {
-                if (($number == 'Q3')
-                  || ($number == 'Q6')
-                  || ($number == 'Q9')
-                  || ($number == 'Q12')
-                  || ($number == 'YTD')
-                  || ($number == 'Years')
-                ) {
-                  continue;
-                }
-                $userInput[$k][$row][$number] = $input;
-
-              }
-              // видалення комірок з пустими значеннями:
-              $results = array_filter($userInput[$k][$row], 'strlen');
-              // валідація рядків:
+              // Filtering from strings key.
+              $clean_data = array_filter($value, function ($element) {
+                return is_int($element);
+              }, $flag = 2);
+              $user_input[$k][$row] = $clean_data;
+              // Clean empty values.
+              $results = array_filter($user_input[$k][$row], 'strlen');
+              // Rows validation.
               $valid = self::check(array_keys($results));
               // якщо рядок не останній і має 12 місяць і валідний,
               // то продовжуємо перевіряти далі:
@@ -252,10 +245,14 @@ class Table extends FormBase {
               // і має поруч заповнені рядки, значить не підходить:
               elseif ($valid && $row != 1 && $row != count($values[$k])) {
                 $stan[$k][$row] = FALSE;
+                $form_state->set('status', FALSE);
+                return;
               }
               // якщо не має 12 місяць але має наступний заповнений ряд:
               elseif ($row > 1 && $valid && ($values[$k][$row - 1]['YTD'] != "")) {
                 $stan[$k][$row] = FALSE;
+                $form_state->set('status', FALSE);
+                return;
               }
               // якщо все інше не спрацювало отже весь ряд валідний:
               elseif ($valid) {
@@ -263,9 +260,10 @@ class Table extends FormBase {
               }
               else {
                 $stan[$k][$row] = FALSE;
+                $form_state->set('status', FALSE);
+                return;
               }
             }
-            // якщо рядок пустий то він валідний:
             else {
               $stan[$k][$row] = TRUE;
             }
@@ -296,24 +294,19 @@ class Table extends FormBase {
       if (in_array(FALSE, $table)) {
         $form_state->set('status', FALSE);
       }
-      /**
-       * Якщо в формі один рік,
-       *  у всіх формах повинні бути заповненні значення
-       *  за однаковий період:
-       */
       else {
-        if ($countOfTables > 1) {
-          for ($i = 1; $i < $countOfTables; $i++) {
+        if ($count_of_tables > 1) {
+          for ($i = 1; $i < $count_of_tables; $i++) {
             foreach ($values[$i] as $key => $rows) {
               if (!isset($values[1][$key]) || !isset($values[$i + 1][$key])) {
                 // $form_state->set('status', TRUE);
                 continue;
               }
-              elseif (!isset($userInput[1][$key]) || !isset($userInput[$i + 1][$key])) {
+              elseif (!isset($user_input[1][$key]) || !isset($user_input[$i + 1][$key])) {
                 // $form_state->set('status', TRUE);
                 continue;
               }
-              elseif (count(array_filter($userInput[1][$key], 'strlen')) != count(array_filter($userInput[$i + 1][$key]))) {
+              elseif (count(array_filter($user_input[1][$key], 'strlen')) != count(array_filter($user_input[$i + 1][$key]))) {
                 // $c = arry_afilter($userInput[1][$key], 'strlen');
                 // $d = array_filter($userInput[$i + 1][$key], 'strlen');
                 $form_state->set('status', FALSE);
