@@ -216,57 +216,131 @@ class Table extends FormBase {
         $values[$k] = $get_input['table' . $k];
         foreach ($values as $rows) {
           foreach ($rows as $row => $value) {
-            // If row is empty than its valid:
-            if ($value['YTD'] != "") {
-              // Filtering from strings key.
-              $clean_data = array_filter($value, function ($element) {
-                return is_int($element);
-              }, $flag = 2);
-              $user_input[$k][$row] = $clean_data;
-              // Clean empty values.
-              $results = array_filter($user_input[$k][$row], 'strlen');
-              // Rows validation.
-              $valid = self::check(array_keys($results));
-              // якщо рядок не останній і має 12 місяць і валідний,
-              // то продовжуємо перевіряти далі:
-              if (array_key_exists(12, $results) && $valid && $row != 1) {
-                $stan[$k][$row] = TRUE;
-              }
-              // якщо валідний, не останній, не перший, не має 12 місяця
-              // і не має поруч заповнені рядки, значить підходить:
-              elseif ($valid
-                && $row != 1
-                && $row != count($values[$k])
-                && ($values[$k][$row - 1]['YTD'] == "")
-                && ($values[$k][$row + 1]['YTD'] == "")) {
-                $stan[$k][$row] = TRUE;
-              }
-              // якщо валідний, не останній, не перший але не має 12 місяця
-              // і має поруч заповнені рядки, значить не підходить:
-              elseif ($valid && $row != 1 && $row != count($values[$k])) {
-                $stan[$k][$row] = FALSE;
-                $form_state->set('status', FALSE);
-                return;
-              }
-              // якщо не має 12 місяць але має наступний заповнений ряд:
-              elseif ($row > 1 && $valid && ($values[$k][$row - 1]['YTD'] != "")) {
-                $stan[$k][$row] = FALSE;
-                $form_state->set('status', FALSE);
-                return;
-              }
-              // якщо все інше не спрацювало отже весь ряд валідний:
-              elseif ($valid) {
-                $stan[$k][$row] = TRUE;
+            // Filtering from strings key.
+            $clean_data = array_filter($value, function ($element) {
+              return is_int($element);
+            }, $flag = 2);
+            $user_input[$k][$row] = $clean_data;
+            // Clean empty values.
+            $results = array_filter($user_input[$k][$row], 'strlen');
+            // Rows validation.
+            $valid = self::check(array_keys($results));
+            // якщо рядок не останній і має 12 місяць і валідний,
+            // то продовжуємо перевіряти далі:
+            if ($valid) {
+              if (1 == count($values[$k])) {
+                $form_state->set('status', TRUE);
               }
               else {
-                $stan[$k][$row] = FALSE;
-                $form_state->set('status', FALSE);
-                return;
+                if (array_key_exists(12, $results)
+                && array_key_exists(1, $results)) {
+                  $stan[$k][$row] = TRUE;
+                  continue;
+                }
+                if ($row == count($values[$k])) {
+                  if ($values[$k][$row - 1]['YTD'] != ""
+                    && !array_key_exists(12, $results)) {
+                    $form_state->set('status', FALSE);
+                    return;
+                  }
+                  else {
+                    $form_state->set('status', TRUE);
+                    continue;
+                  }
+                }
+                if ($row == 1) {
+                  if ($values[$k][$row + 1][12] != ""
+                  && !array_key_exists(1, $results)) {
+                    $form_state->set('status', FALSE);
+                    return;
+                  }
+                  else {
+                    $form_state->set('status', TRUE);
+                    continue;
+                  }
+                }
+//                if (array_key_exists(12, $results)) {
+//                  if ($row == count($values[$k])) {
+//                    $stan[$k][$row] = TRUE;
+//                    continue;
+//                  }
+//                  elseif ($values[$k][$row + 1][12] != ""
+//                    && !array_key_exists(1, $results)) {
+//                    $form_state->set('status', FALSE);
+//                    return;
+//                  }
+//                  $stan[$k][$row] = TRUE;
+//                  $form_state->set('status', TRUE);
+//                }
+//                else {
+//                  if ($row == count($values[$k]) && $values[$k][$row - 1]['YTD'] == "") {
+//                    $form_state->set('status', TRUE);
+//                  }
+//                  elseif ($values[$k][$row + 1][12] != ""
+//                    && !array_key_exists(1, $results)) {
+//                    $form_state->set('status', FALSE);
+//                    return;
+//                  }
+//                  elseif ($values[$k][$row]['YTD'] == "") {
+//                    $form_state->set('status', TRUE);
+//                  }
+//                  else {
+//                    if ($row == count($values[$k])) {
+//                      $form_state->set('status', FALSE);
+//                      return;
+//                    }
+//                    elseif ($values[$k][$row + 1]['YTD'] == "") {
+//                      $form_state->set('status', TRUE);
+//                    }
+//                    elseif ($values[$k][$row + 1]['YTD'] == ""
+//                    && $values[$k][$row - 1]['YTD'] == "") {
+//                      $form_state->set('status', TRUE);
+//                    }
+//                    elseif (array_key_exists(1, $results)) {
+//                      $form_state->set('status', TRUE);
+//                    }
+//                    else {
+//                      $form_state->set('status', FALSE);
+//                      return;
+//                    }
+//                  }
+//                }
               }
             }
             else {
-              $stan[$k][$row] = TRUE;
+              $form_state->set('status', FALSE);
+              return;
             }
+            //              if (array_key_exists(12, $results) && $valid && $row != 1) {
+            //                $stan[$k][$row] = TRUE;
+            //              }
+            // якщо валідний, не останній, не перший, не має 12 місяця
+            // і не має поруч заповнені рядки, значить підходить:
+            //              elseif ($valid
+            //                && $row != 1
+            //                && $row != count($values[$k])
+            //                && ($values[$k][$row - 1]['YTD'] == "")
+            //                && ($values[$k][$row + 1]['YTD'] == "")) {
+            //                $stan[$k][$row] = TRUE;
+            //              }
+            //              // якщо валідний, не останній, не перший але не має 12 місяця
+            //              // і має поруч заповнені рядки, значить не підходить:
+            //              elseif ($valid && $row != 1 && $row != count($values[$k])) {
+            //                $stan[$k][$row] = FALSE;
+            //                $form_state->set('status', FALSE);
+            //                return;
+            //              }
+            //              // якщо не має 12 місяць але має наступний заповнений ряд:
+            //
+            //              // якщо все інше не спрацювало отже весь ряд валідний:
+            //              elseif ($valid) {
+            //                $stan[$k][$row] = TRUE;
+            //              }
+            //              else {
+            //                $stan[$k][$row] = FALSE;
+            //                $form_state->set('status', FALSE);
+            //                return;
+            //              }
 
           }
         }
