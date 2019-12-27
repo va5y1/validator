@@ -202,6 +202,44 @@ class Table extends FormBase {
   }
 
   /**
+   * @param array $A
+   * @param array $B
+   * @return array
+   */
+  public function arrayDiff(array $A, array $B) {
+    $intersect = array_intersect($A, $B);
+    return array_merge(array_diff($A, $intersect), array_diff($B, $intersect));
+  }
+
+  /**
+   * Checks the array of empty rows for break.
+   *
+   * @param array $array
+   *   Numbers of empty rows.
+   * @param int $prev
+   *   Default value.
+   *
+   * @return void True or false.
+   *   Return nothing.
+   */
+  public function row_empty (array $array, $prev = null) {
+    if(empty($array)){
+      return;
+    }
+    $curr = array_shift($array);
+    if($prev == null) {
+      $this->row_empty($array, $curr);
+    }
+    else {
+      if($prev - $curr != 1) {
+        global $diff;
+        $diff++;
+      }
+      $this->row_empty($array, $curr);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
@@ -223,6 +261,13 @@ class Table extends FormBase {
             $user_input[$k][$row] = $clean_data;
             // Clean empty values.
             $results = array_filter($user_input[$k][$row], 'strlen');
+            if (!empty($results)) {
+              $keys = array_keys($results);
+              $first_row_element[$k][] = array_shift($keys);
+            }
+            else {
+              $first_row_element[$k][] = "";
+            }
             // Rows validation.
             $valid = self::check(array_keys($results));
             // якщо рядок не останній і має 12 місяць і валідний,
@@ -234,11 +279,16 @@ class Table extends FormBase {
               else {
                 if (array_key_exists(12, $results)
                 && array_key_exists(1, $results)) {
-                  $stan[$k][$row] = TRUE;
+                  $form_state->set('status', TRUE);
                   continue;
                 }
                 if ($row == count($values[$k])) {
-                  if ($values[$k][$row - 1]['YTD'] != ""
+                  if($values[$k][$row]['YTD'] == "") {
+                    $form_state->set('status', TRUE);
+                    $stan[$k][$row] = 'empty';
+                    continue;
+                  }
+                  elseif ($values[$k][$row - 1]['YTD'] != ""
                     && !array_key_exists(12, $results)) {
                     $form_state->set('status', FALSE);
                     return;
@@ -249,8 +299,18 @@ class Table extends FormBase {
                   }
                 }
                 if ($row == 1) {
-                  if ($values[$k][$row + 1][12] != ""
+                  if($values[$k][$row]['YTD'] == "") {
+                    $form_state->set('status', TRUE);
+                    $stan[$k][$row] = 'empty';
+                    continue;
+                  }
+                  elseif ($values[$k][$row + 1][12] != ""
                   && !array_key_exists(1, $results)) {
+                    $form_state->set('status', FALSE);
+                    return;
+                  }
+                  elseif ($values[$k][$row + 1][12] == ""
+                    && $values[$k][$row + 1]['YTD'] != "") {
                     $form_state->set('status', FALSE);
                     return;
                   }
@@ -259,145 +319,75 @@ class Table extends FormBase {
                     continue;
                   }
                 }
-//                if (array_key_exists(12, $results)) {
-//                  if ($row == count($values[$k])) {
-//                    $stan[$k][$row] = TRUE;
-//                    continue;
-//                  }
-//                  elseif ($values[$k][$row + 1][12] != ""
-//                    && !array_key_exists(1, $results)) {
-//                    $form_state->set('status', FALSE);
-//                    return;
-//                  }
-//                  $stan[$k][$row] = TRUE;
-//                  $form_state->set('status', TRUE);
-//                }
-//                else {
-//                  if ($row == count($values[$k]) && $values[$k][$row - 1]['YTD'] == "") {
-//                    $form_state->set('status', TRUE);
-//                  }
-//                  elseif ($values[$k][$row + 1][12] != ""
-//                    && !array_key_exists(1, $results)) {
-//                    $form_state->set('status', FALSE);
-//                    return;
-//                  }
-//                  elseif ($values[$k][$row]['YTD'] == "") {
-//                    $form_state->set('status', TRUE);
-//                  }
-//                  else {
-//                    if ($row == count($values[$k])) {
-//                      $form_state->set('status', FALSE);
-//                      return;
-//                    }
-//                    elseif ($values[$k][$row + 1]['YTD'] == "") {
-//                      $form_state->set('status', TRUE);
-//                    }
-//                    elseif ($values[$k][$row + 1]['YTD'] == ""
-//                    && $values[$k][$row - 1]['YTD'] == "") {
-//                      $form_state->set('status', TRUE);
-//                    }
-//                    elseif (array_key_exists(1, $results)) {
-//                      $form_state->set('status', TRUE);
-//                    }
-//                    else {
-//                      $form_state->set('status', FALSE);
-//                      return;
-//                    }
-//                  }
-//                }
+                if($values[$k][$row]['YTD'] == "") {
+                  if ($values[$k][count($values[$k])]['YTD'] != ""
+                  && $values[$k][1]['YTD'] != "") {
+                    $form_state->set('status', FALSE);
+                    return;
+                  }
+                  if($values[$k][$row+1]['YTD'] != ""
+                  && $values[$k][$row-1]['YTD'] != ""){
+                    $form_state->set('status', FALSE);
+                    return;
+                  }
+                  $form_state->set('status', TRUE);
+                  $stan[$k][$row] = 'empty';
+                  continue;
+                }
+                if($values[$k][$row + 1][12] != ""
+                  && !array_key_exists(1, $results)) {
+                  $form_state->set('status', FALSE);
+                  return;
+                }
+                if($values[$k][$row - 1][12] != ""
+                  && !array_key_exists(12, $results)) {
+                  $form_state->set('status', FALSE);
+                  return;
+                }
+                if($values[$k][$row - 1][1] != ""
+                  && !array_key_exists(12, $results)) {
+                  $form_state->set('status', FALSE);
+                  return;
+                }
               }
             }
             else {
               $form_state->set('status', FALSE);
               return;
             }
-            //              if (array_key_exists(12, $results) && $valid && $row != 1) {
-            //                $stan[$k][$row] = TRUE;
-            //              }
-            // якщо валідний, не останній, не перший, не має 12 місяця
-            // і не має поруч заповнені рядки, значить підходить:
-            //              elseif ($valid
-            //                && $row != 1
-            //                && $row != count($values[$k])
-            //                && ($values[$k][$row - 1]['YTD'] == "")
-            //                && ($values[$k][$row + 1]['YTD'] == "")) {
-            //                $stan[$k][$row] = TRUE;
-            //              }
-            //              // якщо валідний, не останній, не перший але не має 12 місяця
-            //              // і має поруч заповнені рядки, значить не підходить:
-            //              elseif ($valid && $row != 1 && $row != count($values[$k])) {
-            //                $stan[$k][$row] = FALSE;
-            //                $form_state->set('status', FALSE);
-            //                return;
-            //              }
-            //              // якщо не має 12 місяць але має наступний заповнений ряд:
-            //
-            //              // якщо все інше не спрацювало отже весь ряд валідний:
-            //              elseif ($valid) {
-            //                $stan[$k][$row] = TRUE;
-            //              }
-            //              else {
-            //                $stan[$k][$row] = FALSE;
-            //                $form_state->set('status', FALSE);
-            //                return;
-            //              }
-
           }
         }
       }
-      // загальна валідність для кожної форми:
-      $table = [];
-      foreach ($stan as $tables) {
-        $rows = count($tables);
-        foreach ($tables as $row => $key) {
-          if ($key && $row != $rows) {
-            continue;
-          }
-          elseif ($key && count($stan) == 1) {
-            $form_state->set('status', TRUE);
-          }
-          elseif ($key) {
-            $table[] = TRUE;
-          }
-          else {
-            $table[] = FALSE;
+      // Checking for empty rows break.
+      if(!empty($stan)) {
+        foreach ($stan as $tables) {
+          $rows = count($tables);
+          global $diff;
+          $diff = 0;
+          $t_keys = array_keys($tables);
+          $this->row_empty($t_keys);
+          if ($diff > 1) {
+            $form_state->set('status', FALSE);
+            return;
+          } elseif ($diff == 1 && (array_key_exists(1, $tables) || array_key_exists($rows, $tables))) {
+            $form_state->set('status', FALSE);
+            return;
           }
         }
       }
-      // перевірка на валідність всіх форм разом:
-      if (in_array(FALSE, $table)) {
-        $form_state->set('status', FALSE);
-      }
-      else {
+      // Checking the same values for all form.
         if ($count_of_tables > 1) {
-          for ($i = 1; $i < $count_of_tables; $i++) {
-            foreach ($values[$i] as $key => $rows) {
-              if (!isset($values[1][$key]) || !isset($values[$i + 1][$key])) {
-                // $form_state->set('status', TRUE);
-                continue;
-              }
-              elseif (!isset($user_input[1][$key]) || !isset($user_input[$i + 1][$key])) {
-                // $form_state->set('status', TRUE);
-                continue;
-              }
-              elseif (count(array_filter($user_input[1][$key], 'strlen')) != count(array_filter($user_input[$i + 1][$key]))) {
-                // $c = arry_afilter($userInput[1][$key], 'strlen');
-                // $d = array_filter($userInput[$i + 1][$key], 'strlen');
+          for ($i = 2; $i <= $count_of_tables; $i++) {
+              $diff = array_diff($first_row_element[1], $first_row_element[$i]);
+              $diff2 = $this->arrayDiff($first_row_element[1], $first_row_element[$i]);
+              if (!empty($diff2)) {
                 $form_state->set('status', FALSE);
-                break;
-              }
-              else {
-                $form_state->set('status', TRUE);
+                return;
               }
 
             }
-          }
 
         }
-        else {
-          $form_state->set('status', TRUE);
-        }
-      }
 
     }
 
