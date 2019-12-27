@@ -202,9 +202,13 @@ class Table extends FormBase {
   }
 
   /**
+   * Check 2  arrays for diff values.
    * @param array $A
+   *   Array first.
    * @param array $B
+   *   Array second.
    * @return array
+   *   Return array of values
    */
   public function arrayDiff(array $A, array $B) {
     $intersect = array_intersect($A, $B);
@@ -247,7 +251,7 @@ class Table extends FormBase {
     if ($submit['#value'] == 'Submit') {
       $tables = $form_state->get('tab');
       // Get all users input.
-      $get_input = ($form_state->getValues());
+      $get_input = $form_state->getValues();
       // Filtering array from quartals and years.
       for ($k = 1; $k <= $tables; $k++) {
         $count_of_tables = $k;
@@ -266,12 +270,10 @@ class Table extends FormBase {
               $first_row_element[$k][] = array_shift($keys);
             }
             else {
-              $first_row_element[$k][] = "";
+              $first_row_element[$k][] = 0;
             }
             // Rows validation.
             $valid = self::check(array_keys($results));
-            // якщо рядок не останній і має 12 місяць і валідний,
-            // то продовжуємо перевіряти далі:
             if ($valid) {
               if (1 == count($values[$k])) {
                 $form_state->set('status', TRUE);
@@ -319,6 +321,7 @@ class Table extends FormBase {
                     continue;
                   }
                 }
+                print_r($values[$k][$row]);
                 if($values[$k][$row]['YTD'] == "") {
                   if ($values[$k][count($values[$k])]['YTD'] != ""
                   && $values[$k][1]['YTD'] != "") {
@@ -378,9 +381,11 @@ class Table extends FormBase {
       // Checking the same values for all form.
         if ($count_of_tables > 1) {
           for ($i = 2; $i <= $count_of_tables; $i++) {
-              $diff = array_diff($first_row_element[1], $first_row_element[$i]);
-              $diff2 = $this->arrayDiff($first_row_element[1], $first_row_element[$i]);
-              if (!empty($diff2)) {
+              $difference = $this->arrayDiff($first_row_element[1], $first_row_element[$i]);
+              if (!empty($difference)) {
+                if (empty(array_filter($difference))){
+                  continue;
+                }
                 $form_state->set('status', FALSE);
                 return;
               }
