@@ -258,116 +258,104 @@ class Table extends FormBase {
         $values[$k] = $get_input['table' . $k];
         foreach ($values as $rows) {
           foreach ($rows as $row => $value) {
-            // Filtering from strings key.
+            // Filtering from strings keys.
             $clean_data = array_filter($value, function ($element) {
               return is_int($element);
             }, $flag = 2);
             $user_input[$k][$row] = $clean_data;
-            // Clean empty values.
+            // Cleaning from empty values.
             $results = array_filter($user_input[$k][$row], 'strlen');
             if (!empty($results)) {
-              $keys = array_keys($results);
-              $first_row_element[$k][] = array_shift($keys);
-            }
-            else {
-              $first_row_element[$k][] = 0;
+              $row_key_element[$k][$row] = array_keys($results);
             }
             // Rows validation.
             $valid = self::check(array_keys($results));
             if ($valid) {
               if (1 == count($values[$k])) {
                 $form_state->set('status', TRUE);
-              }
-              else {
+              } else {
                 if (array_key_exists(12, $results)
-                && array_key_exists(1, $results)) {
-                  $form_state->set('status', TRUE);
+                  && array_key_exists(1, $results)) {
                   continue;
                 }
+                // Checking if row is first.
                 if ($row == count($values[$k])) {
-                  if($values[$k][$row]['YTD'] == "") {
-                    $form_state->set('status', TRUE);
+                  if ($values[$k][$row]['YTD'] == "") {
                     $stan[$k][$row] = 'empty';
                     continue;
-                  }
-                  elseif ($values[$k][$row - 1]['YTD'] != ""
+                  } elseif ($values[$k][$row - 1]['YTD'] != ""
                     && !array_key_exists(12, $results)) {
                     $form_state->set('status', FALSE);
                     return;
-                  }
-                  else {
-                    $form_state->set('status', TRUE);
+                  } else {
                     continue;
                   }
                 }
+                // Checking if row is last.
                 if ($row == 1) {
-                  if($values[$k][$row]['YTD'] == "") {
-                    $form_state->set('status', TRUE);
+                  if ($values[$k][$row]['YTD'] == "") {
                     $stan[$k][$row] = 'empty';
                     continue;
-                  }
-                  elseif ($values[$k][$row + 1][12] != ""
-                  && !array_key_exists(1, $results)) {
+                  } elseif ($values[$k][$row + 1][12] != ""
+                    && !array_key_exists(1, $results)) {
                     $form_state->set('status', FALSE);
                     return;
-                  }
-                  elseif ($values[$k][$row + 1][12] == ""
+                  } elseif ($values[$k][$row + 1][12] == ""
                     && $values[$k][$row + 1]['YTD'] != "") {
                     $form_state->set('status', FALSE);
                     return;
-                  }
-                  else {
-                    $form_state->set('status', TRUE);
+                  } else {
                     continue;
                   }
                 }
-                print_r($values[$k][$row]);
-                if($values[$k][$row]['YTD'] == "") {
-                  if ($values[$k][count($values[$k])]['YTD'] != ""
-                  && $values[$k][1]['YTD'] != "") {
+                // Checking if row is empty.
+                if ($values[$k][$row]['YTD'] == "") {
+                  $first_row = count($values[$k]);
+                  if ($values[$k][$first_row]['YTD'] != ""
+                    && $values[$k][1]['YTD'] != "") {
                     $form_state->set('status', FALSE);
                     return;
                   }
-                  if($values[$k][$row+1]['YTD'] != ""
-                  && $values[$k][$row-1]['YTD'] != ""){
+                  if ($values[$k][$row + 1]['YTD'] != ""
+                    && $values[$k][$row - 1]['YTD'] != "") {
                     $form_state->set('status', FALSE);
                     return;
                   }
-                  $form_state->set('status', TRUE);
                   $stan[$k][$row] = 'empty';
                   continue;
                 }
-                if($values[$k][$row + 1][12] != ""
+                // Checking if row is else.
+                if ($values[$k][$row + 1][12] != ""
                   && !array_key_exists(1, $results)) {
                   $form_state->set('status', FALSE);
                   return;
                 }
-                if($values[$k][$row - 1][12] != ""
+                if ($values[$k][$row - 1][12] != ""
                   && !array_key_exists(12, $results)) {
                   $form_state->set('status', FALSE);
                   return;
                 }
-                if($values[$k][$row - 1][1] != ""
+                if ($values[$k][$row - 1][1] != ""
                   && !array_key_exists(12, $results)) {
                   $form_state->set('status', FALSE);
                   return;
                 }
               }
-            }
-            else {
+            } else {
               $form_state->set('status', FALSE);
               return;
             }
           }
         }
       }
-      // Checking for empty rows break.
-      if(!empty($stan)) {
+      // Checking for breaks between empty rows.
+      if (!empty($stan)) {
         foreach ($stan as $tables) {
           $rows = count($tables);
           global $diff;
           $diff = 0;
-          $t_keys = array_keys($tables);
+          $t_keys =array_keys($tables);
+          rsort($t_keys);
           $this->row_empty($t_keys);
           if ($diff > 1) {
             $form_state->set('status', FALSE);
@@ -378,21 +366,23 @@ class Table extends FormBase {
           }
         }
       }
-      // Checking the same values for all form.
-        if ($count_of_tables > 1) {
-          for ($i = 2; $i <= $count_of_tables; $i++) {
-              $difference = $this->arrayDiff($first_row_element[1], $first_row_element[$i]);
-              if (!empty($difference)) {
-                if (empty(array_filter($difference))){
-                  continue;
-                }
-                $form_state->set('status', FALSE);
-                return;
-              }
-
+      // Checking the same values for all forms.
+      if ($count_of_tables > 1) {
+        for ($i = 1; $i < $count_of_tables; $i++) {
+          foreach ($values[$i] as $key => $rows) {
+            if (!isset($row_key_element[1][$key]) || !isset($row_key_element[$i + 1][$key])) {
+              continue;
+            }
+            $difference = $this->arrayDiff($row_key_element[1][$key], $row_key_element[$i+1][$key]);
+            if (!empty($difference)) {
+              $form_state->set('status', FALSE);
+              return;
             }
 
+          }
         }
+
+      }
 
     }
 
