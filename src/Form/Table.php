@@ -203,16 +203,18 @@ class Table extends FormBase {
 
   /**
    * Check 2  arrays for diff values.
-   * @param array $A
+   *
+   * @param array $a
    *   Array first.
-   * @param array $B
+   * @param array $b
    *   Array second.
+   *
    * @return array
    *   Return array of values
    */
-  public function arrayDiff(array $A, array $B) {
-    $intersect = array_intersect($A, $B);
-    return array_merge(array_diff($A, $intersect), array_diff($B, $intersect));
+  public function arrayDiff(array $a, array $b) {
+    $intersect = array_intersect($a, $b);
+    return array_merge(array_diff($a, $intersect), array_diff($b, $intersect));
   }
 
   /**
@@ -223,23 +225,22 @@ class Table extends FormBase {
    * @param int $prev
    *   Default value.
    *
-   * @return void True or false.
    *   Return nothing.
    */
-  public function row_empty (array $array, $prev = null) {
-    if(empty($array)){
+  public function rowEmpty(array $array, $prev = NULL) {
+    if (empty($array)) {
       return;
     }
     $curr = array_shift($array);
-    if($prev == null) {
-      $this->row_empty($array, $curr);
+    if ($prev == NULL) {
+      $this->rowEmpty($array, $curr);
     }
     else {
-      if($prev - $curr != 1) {
-        global $diff;
-        $diff++;
+      if ($prev - $curr != 1) {
+        global $_diff;
+        $_diff++;
       }
-      $this->row_empty($array, $curr);
+      $this->rowEmpty($array, $curr);
     }
   }
 
@@ -273,7 +274,8 @@ class Table extends FormBase {
             if ($valid) {
               if (1 == count($values[$k])) {
                 $form_state->set('status', TRUE);
-              } else {
+              }
+              else {
                 if (array_key_exists(12, $results)
                   && array_key_exists(1, $results)) {
                   continue;
@@ -283,11 +285,13 @@ class Table extends FormBase {
                   if ($values[$k][$row]['YTD'] == "") {
                     $stan[$k][$row] = 'empty';
                     continue;
-                  } elseif ($values[$k][$row - 1]['YTD'] != ""
+                  }
+                  elseif ($values[$k][$row - 1]['YTD'] != ""
                     && !array_key_exists(12, $results)) {
                     $form_state->set('status', FALSE);
                     return;
-                  } else {
+                  }
+                  else {
                     continue;
                   }
                 }
@@ -296,15 +300,18 @@ class Table extends FormBase {
                   if ($values[$k][$row]['YTD'] == "") {
                     $stan[$k][$row] = 'empty';
                     continue;
-                  } elseif ($values[$k][$row + 1][12] != ""
+                  }
+                  elseif ($values[$k][$row + 1][12] != ""
                     && !array_key_exists(1, $results)) {
                     $form_state->set('status', FALSE);
                     return;
-                  } elseif ($values[$k][$row + 1][12] == ""
+                  }
+                  elseif ($values[$k][$row + 1][12] == ""
                     && $values[$k][$row + 1]['YTD'] != "") {
                     $form_state->set('status', FALSE);
                     return;
-                  } else {
+                  }
+                  else {
                     continue;
                   }
                 }
@@ -324,7 +331,7 @@ class Table extends FormBase {
                   $stan[$k][$row] = 'empty';
                   continue;
                 }
-                // Checking if row is else.
+                // Checking if row is else than higher.
                 if ($values[$k][$row + 1][12] != ""
                   && !array_key_exists(1, $results)) {
                   $form_state->set('status', FALSE);
@@ -341,7 +348,8 @@ class Table extends FormBase {
                   return;
                 }
               }
-            } else {
+            }
+            else {
               $form_state->set('status', FALSE);
               return;
             }
@@ -352,15 +360,16 @@ class Table extends FormBase {
       if (!empty($stan)) {
         foreach ($stan as $tables) {
           $rows = count($tables);
-          global $diff;
-          $diff = 0;
-          $t_keys =array_keys($tables);
+          global $_diff;
+          $_diff = 0;
+          $t_keys = array_keys($tables);
           rsort($t_keys);
-          $this->row_empty($t_keys);
-          if ($diff > 1) {
+          $this->rowEmpty($t_keys);
+          if ($_diff > 1) {
             $form_state->set('status', FALSE);
             return;
-          } elseif ($diff == 1 && (array_key_exists(1, $tables) || array_key_exists($rows, $tables))) {
+          }
+          elseif ($_diff == 1 && (array_key_exists(1, $tables) || array_key_exists($rows, $tables))) {
             $form_state->set('status', FALSE);
             return;
           }
@@ -373,7 +382,7 @@ class Table extends FormBase {
             if (!isset($row_key_element[1][$key]) || !isset($row_key_element[$i + 1][$key])) {
               continue;
             }
-            $difference = $this->arrayDiff($row_key_element[1][$key], $row_key_element[$i+1][$key]);
+            $difference = $this->arrayDiff($row_key_element[1][$key], $row_key_element[$i + 1][$key]);
             if (!empty($difference)) {
               $form_state->set('status', FALSE);
               return;
